@@ -7,7 +7,7 @@ defmodule Snickr.Accounts.Subscription do
   @primary_key false
   schema "subscriptions" do
     belongs_to :user, User, primary_key: true
-    belongs_to :channel_id, Channel, primary_key: true
+    belongs_to :channel, Channel, primary_key: true
 
     timestamps(updated_at: false, type: :utc_datetime)
   end

@@ -8,7 +8,7 @@ defmodule Snickr.Platform.Workspace do
   schema "workspaces" do
     field :description, :string
     field :name, :string, null: false
-    has_one :created_by_user, User
+    belongs_to :created_by_user, User
     has_many :channels, Channel
 
     many_to_many :members, User, join_through: "memberships"

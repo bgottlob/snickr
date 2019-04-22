@@ -13,6 +13,9 @@ defmodule Snickr.Accounts.User do
     field :salt, :string, null: false
     field :username, :string, null: false
 
+    has_many :created_workspaces, Workspace
+    has_many :created_channels, Channel
+
     many_to_many :member_of_workspaces, Workspace, join_through: "memberships"
     many_to_many :admin_of_workspaces, Workspace, join_through: "admins"
     many_to_many :subscribed_to_channels, Channel, join_through: "subscriptions"

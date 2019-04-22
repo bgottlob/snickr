@@ -6,7 +6,7 @@ defmodule Snickr.Repo.Migrations.CreateSubscriptions do
       add :user_id, references(:users, on_delete: :nothing), primary_key: true
       add :channel_id, references(:channels, on_delete: :nothing), primary_key: true
 
-      timestamps()
+      timestamps(updated_at: false, type: :utc_datetime)
     end
 
     create index(:subscriptions, [:user_id])

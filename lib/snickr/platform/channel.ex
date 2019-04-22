@@ -9,7 +9,8 @@ defmodule Snickr.Platform.Channel do
     field :description, :string
     field :name, :string
     field :type, :string
-    has_one :created_by_user_id, User
+
+    belongs_to :created_by_user, User
     belongs_to :workspace, Workspace
 
     many_to_many :subscribers, User, join_through: "subscriptions"

@@ -7,14 +7,16 @@ defmodule Snickr.Platform.Message do
 
   @primary_key false
   schema "messages" do
-    field :inserted_at, :utc_datetime_usec, primary_key: true
+    # TODO Figure out how to make inserted_at marked as a primary key here
+    # while still having it autopopulate
+    #field :inserted_at, :utc_datetime_usec, primary_key: true
     belongs_to :channel, Channel, primary_key: true
     belongs_to :sent_by_user, User, primary_key: true
 
     field :content, :string
     field :edited, :boolean, default: false
 
-    timestamps(type: :utc_datetime_usec, inserted_at: false)
+    timestamps(type: :utc_datetime_usec)
   end
 
   @doc false
