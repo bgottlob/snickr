@@ -11,6 +11,9 @@ defmodule Snickr.Platform.Workspace do
     has_one :created_by_user, User
     has_many :channels, Channel
 
+    many_to_many :members, User, join_through: "memberships"
+    many_to_many :admins, User, join_through: "admins"
+
     timestamps(type: :utc_datetime)
   end
 

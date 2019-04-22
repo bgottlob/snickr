@@ -12,6 +12,8 @@ defmodule Snickr.Platform.Channel do
     has_one :created_by_user_id, User
     belongs_to :workspace, Workspace
 
+    many_to_many :subscribers, User, join_through: "subscriptions"
+
     timestamps(type: :utc_datetime)
   end
 
