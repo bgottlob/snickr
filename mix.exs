@@ -45,7 +45,9 @@ defmodule Snickr.MixProject do
       {:plug_cowboy, "~> 2.0"},
       #{:faker, "~> 0.12", only: :test}
       ## faker is a runtime dep because it is used in the seeds file
-      {:faker, "~> 0.12"}
+      {:faker, "~> 0.12"},
+      {:comeonin, "~> 5.1"},
+      {:pbkdf2_elixir, "~> 1.0"}
     ]
   end
 

@@ -1,0 +1,1 @@
+<h1>Hi I'm <%= @user.first_name %> (<%= @user.id %>)</h1>

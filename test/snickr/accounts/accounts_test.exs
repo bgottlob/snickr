@@ -6,9 +6,25 @@ defmodule Snickr.AccountsTest do
   describe "users" do
     alias Snickr.Accounts.User
 
-    @valid_attrs %{email: "some email", first_name: "some first_name", last_name: "some last_name", password_hash: "some password_hash", salt: "some salt", username: "some username"}
-    @update_attrs %{email: "some updated email", first_name: "some updated first_name", last_name: "some updated last_name", password_hash: "some updated password_hash", salt: "some updated salt", username: "some updated username"}
-    @invalid_attrs %{email: nil, first_name: nil, last_name: nil, password_hash: nil, salt: nil, username: nil}
+    @valid_attrs %{
+      email: "some email",
+      first_name: "some first_name",
+      last_name: "some last_name",
+      password: "some password",
+      username: "some username"
+    }
+    @update_attrs %{
+      email: "some updated email",
+      first_name: "some updated first_name",
+      last_name: "some updated last_name",
+    }
+    @invalid_attrs %{
+      email: nil,
+      first_name: nil,
+      last_name: nil,
+      password_hash: nil,
+      username: nil
+    }
 
     def user_fixture(attrs \\ %{}) do
       {:ok, user} =
@@ -19,7 +35,6 @@ defmodule Snickr.AccountsTest do
       user
     end
 
-    @tag :skip
     test "list_users/0 returns all users" do
       user = user_fixture()
       assert Accounts.list_users() == [user]
@@ -31,18 +46,18 @@ defmodule Snickr.AccountsTest do
       assert Accounts.get_user!(user.id) == user
     end
 
-    @tag :skip
     test "create_user/1 with valid data creates a user" do
       assert {:ok, %User{} = user} = Accounts.create_user(@valid_attrs)
       assert user.email == "some email"
       assert user.first_name == "some first_name"
       assert user.last_name == "some last_name"
-      assert user.password_hash == "some password_hash"
-      assert user.salt == "some salt"
+      assert user.password == nil
+      assert String.length(user.password_hash) > 0
+      assert String.length(Map.get(@valid_attrs, :password)) > 0
+      assert user.password_hash != Map.get(@valid_attrs, :password)
       assert user.username == "some username"
     end
 
-    @tag :skip
     test "create_user/1 with invalid data returns error changeset" do
       assert {:error, %Ecto.Changeset{}} = Accounts.create_user(@invalid_attrs)
     end
@@ -55,7 +70,6 @@ defmodule Snickr.AccountsTest do
       assert user.first_name == "some updated first_name"
       assert user.last_name == "some updated last_name"
       assert user.password_hash == "some updated password_hash"
-      assert user.salt == "some updated salt"
       assert user.username == "some updated username"
     end
 
