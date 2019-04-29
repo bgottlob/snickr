@@ -14,9 +14,11 @@ defmodule Snickr.Accounts.Membership do
   end
 
   @doc false
-  def changeset(membership, attrs) do
+  def create_changeset(membership, user, workspace) do
     membership
-    |> cast(attrs, [])
-    |> validate_required([])
+    |> cast(%{}, [])
+    |> put_assoc(:user, user)
+    |> put_assoc(:workspace, workspace)
+    |> validate_required([:user, :workspace])
   end
 end

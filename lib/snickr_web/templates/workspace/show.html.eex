@@ -1,0 +1,11 @@
+<h1><%= @workspace.name %></h1>
+<p><%= @workspace.description %></p>
+
+<h2>Channels</h2>
+<ul>
+  <%= for c <- @workspace.channels do %>
+    <li><%= c.name %></li>
+  <% end %>
+</ul>
+
+Create a Channel (link not implemented yet)

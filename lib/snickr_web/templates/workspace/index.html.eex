@@ -1,0 +1,7 @@
+<h1>Your Workspaces</h1>
+
+<ul>
+<%= for w <- @workspaces do %>
+  <li><%= link w.name, to: Routes.workspace_path(@conn, :show, w.id) %></li>
+<% end %>
+</ul>
