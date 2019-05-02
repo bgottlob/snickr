@@ -13,8 +13,8 @@ defmodule Snickr.Accounts.User do
     field :password_hash, :string, null: false
     field :username, :string, null: false
 
-    has_many :created_workspaces, Workspace
-    has_many :created_channels, Channel
+    has_many :created_workspaces, Workspace, foreign_key: :created_by_user_id
+    has_many :created_channels, Channel, foreign_key: :created_by_user_id
 
     many_to_many :member_of_workspaces, Workspace, join_through: "memberships"
     many_to_many :admin_of_workspaces, Workspace, join_through: "admins"
@@ -38,10 +38,6 @@ defmodule Snickr.Accounts.User do
     |> delete_change(:password)
   end
 
-  @doc """
-  Hashes a plaintext password and adds its salted hash as password_hash to a
-  changeset.
-  """
   defp put_password_hash(changeset) do
     case changeset do
       %Ecto.Changeset{valid?: true, changes: %{password: password}} ->
