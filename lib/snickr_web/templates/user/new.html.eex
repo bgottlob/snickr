@@ -1,0 +1,30 @@
+<h1>Register</h1>
+
+<%= form_for @changeset, Routes.user_path(@conn, :create), [as: :user], fn f -> %>
+  <%= if @changeset.action do %>
+    <div class="alert alert-danger">
+      <p>Something went wrong! Please check the errors below</p>
+    </div>
+  <% end %>
+  <div>
+    <%= text_input f, :first_name, placeholder: "First" %>
+    <%= error_tag f, :first_name %>
+  </div>
+  <div>
+    <%= text_input f, :last_name, placeholder: "Last" %>
+    <%= error_tag f, :last_name %>
+  </div>
+  <div>
+    <%= text_input f, :email, placeholder: "Email" %>
+    <%= error_tag f, :email %>
+  </div>
+  <div>
+    <%= text_input f, :username, placeholder: "Username" %>
+    <%= error_tag f, :username %>
+  </div>
+  <div>
+    <%= password_input f, :password, placeholder: "Password" %>
+    <%= error_tag f, :password %>
+  </div>
+<%= submit "Register" %>
+<% end %>

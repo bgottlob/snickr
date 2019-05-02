@@ -23,8 +23,7 @@ for _ <- 1..10 do
   u = %User{
     first_name: Faker.Name.first_name(),
     last_name: Faker.Name.last_name(),
-    password_hash: Faker.String.base64(32),
-    salt: Faker.String.base64(32)
+    password_hash: Faker.String.base64(32)
   }
   u = %{u | username: "#{String.first(u.first_name) |> String.downcase}#{String.downcase u.last_name}"}
   u = %{u | email: "#{u.username}@#{Faker.Internet.domain_name()}"}

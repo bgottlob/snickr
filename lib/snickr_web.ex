@@ -23,6 +23,7 @@ defmodule SnickrWeb do
 
       import Plug.Conn
       import SnickrWeb.Gettext
+      import SnickrWeb.Auth, only: [authenticate_user: 2]
       alias SnickrWeb.Router.Helpers, as: Routes
     end
   end

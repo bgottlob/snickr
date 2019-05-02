@@ -22,7 +22,37 @@ defmodule Snickr.Accounts do
   end
 
   @doc """
-  Gets a single user.
+  Gets a single user omitting the password hash for security.
+
+  Raises `Ecto.NoResultsError` if the User does not exist.
+
+  ## Examples
+
+      iex> get_user!(123)
+      %User{}
+
+      iex> get_user!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_user!(id) do
+    Repo.get!(User, id)
+    |> Map.put(:password_hash, nil)
+    |> Map.put(:password, nil)
+  end
+
+  def get_user(id) do
+    case Repo.get(User, id) do
+      nil -> nil
+      user ->
+        user
+        |> Map.put(:password_hash, nil)
+        |> Map.put(:password, nil)
+    end
+  end
+
+  @doc """
+  Gets a single user with a password hash.
 
   Raises `Ecto.NoResultsError` if the User does not exist.
 
@@ -36,6 +66,7 @@ defmodule Snickr.Accounts do
 
   """
   def get_user!(id), do: Repo.get!(User, id)
+
 
   @doc """
   Creates a user.
@@ -51,8 +82,27 @@ defmodule Snickr.Accounts do
   """
   def create_user(attrs \\ %{}) do
     %User{}
-    |> User.changeset(attrs)
+    |> User.create_changeset(attrs) # Plaintext password not be included in changeset
     |> Repo.insert()
+  end
+
+  def change_user(user, attrs) do
+    User.create_changeset(user, attrs)
+  end
+
+  def authenticate(username, password) do
+    user = from(u in User, where: u.username == ^username) |> Repo.one
+
+    cond do
+      user && Pbkdf2.check_pass(user, password) ->
+        {:ok, user}
+      user ->
+        {:error, :unauthorized}
+      true ->
+        # Protect against timing attacks
+        Pbkdf2.no_user_verify()
+        {:error, :unauthorized}
+    end
   end
 
   @doc """
