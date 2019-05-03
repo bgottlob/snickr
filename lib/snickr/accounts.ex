@@ -43,7 +43,9 @@ defmodule Snickr.Accounts do
 
   def get_user(id) do
     case Repo.get(User, id) do
-      nil -> nil
+      nil ->
+        nil
+
       user ->
         user
         |> Map.put(:password_hash, nil)
@@ -65,7 +67,8 @@ defmodule Snickr.Accounts do
   """
   def create_user(attrs \\ %{}) do
     %User{}
-    |> User.create_changeset(attrs) # Plaintext password not be included in changeset
+    # Plaintext password not be included in changeset
+    |> User.create_changeset(attrs)
     |> Repo.insert()
   end
 
@@ -74,13 +77,15 @@ defmodule Snickr.Accounts do
   end
 
   def authenticate(username, password) do
-    user = from(u in User, where: u.username == ^username) |> Repo.one
+    user = from(u in User, where: u.username == ^username) |> Repo.one()
 
     cond do
       user && Pbkdf2.check_pass(user, password) ->
         {:ok, user}
+
       user ->
         {:error, :unauthorized}
+
       true ->
         # Protect against timing attacks
         Pbkdf2.no_user_verify()
@@ -181,7 +186,6 @@ defmodule Snickr.Accounts do
 
   """
   def get_admin!(id), do: Repo.get!(Admin, id)
-
 
   @doc """
   Deletes a Admin.

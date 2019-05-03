@@ -11,8 +11,8 @@ defmodule Snickr.Repo.Migrations.CreateUsers do
 
       timestamps(type: :utc_datetime)
     end
+
     create index(:users, :username, unique: true)
     create index(:users, :email, unique: true)
-
   end
 end

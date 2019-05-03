@@ -13,6 +13,7 @@ defmodule SnickrWeb.SessionController do
         conn
         |> put_flash(:info, "You have successfully logged in")
         |> redirect(to: Routes.page_path(conn, :index))
+
       {:error, :unauthorized, conn} ->
         conn
         |> put_flash(:error, "You failed to log in")

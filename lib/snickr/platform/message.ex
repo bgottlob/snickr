@@ -9,7 +9,7 @@ defmodule Snickr.Platform.Message do
   schema "messages" do
     # TODO Figure out how to make inserted_at marked as a primary key here
     # while still having it autopopulate
-    #field :inserted_at, :utc_datetime_usec, primary_key: true
+    # field :inserted_at, :utc_datetime_usec, primary_key: true
     belongs_to :channel, Channel, primary_key: true
     belongs_to :sent_by_user, User, primary_key: true
 

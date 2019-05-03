@@ -9,7 +9,8 @@ defmodule Snickr.Accounts.User do
     field :email, :string, null: false
     field :first_name, :string, null: false
     field :last_name, :string, null: false
-    field :password, :string, virtual: true # virtual, won't be stored in db
+    # virtual, won't be stored in db
+    field :password, :string, virtual: true
     field :password_hash, :string, null: false
     field :username, :string, null: false
 
@@ -42,6 +43,7 @@ defmodule Snickr.Accounts.User do
     case changeset do
       %Ecto.Changeset{valid?: true, changes: %{password: password}} ->
         put_change(changeset, :password_hash, Pbkdf2.hash_pwd_salt(password))
+
       _ ->
         changeset
     end

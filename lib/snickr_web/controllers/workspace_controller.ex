@@ -16,6 +16,7 @@ defmodule SnickrWeb.WorkspaceController do
         conn
         |> put_flash(:info, "You have successfully created the #{workspace.name} workspace!")
         |> redirect(to: Routes.workspace_path(conn, :show, workspace.id))
+
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)
     end
@@ -31,6 +32,7 @@ defmodule SnickrWeb.WorkspaceController do
         conn
         |> put_flash(:error, "Workspace not found")
         |> redirect(to: Routes.workspace_path(conn, :index))
+
       workspace ->
         render(conn, "show.html", workspace: Platform.preload_channels(workspace))
     end
