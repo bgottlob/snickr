@@ -7,18 +7,18 @@ defmodule Snickr.Platform do
   alias Snickr.Repo
 
   alias Snickr.Platform.Workspace
+  alias Snickr.Accounts.User
+  alias Snickr.Accounts.Admin
+  alias Snickr.Accounts.Membership
 
   @doc """
-  Returns the list of workspaces.
-
-  ## Examples
-
-      iex> list_workspaces()
-      [%Workspace{}, ...]
-
+  Returns the list of workspaces the user is a member of.
   """
-  def list_workspaces do
-    Repo.all(Workspace)
+  def list_workspaces(%User{} = user) do
+    q = from w in Workspace,
+      join: u in assoc(w, :members),
+      where: u.id == ^user.id
+    Repo.all(q)
   end
 
   @doc """
@@ -38,6 +38,16 @@ defmodule Snickr.Platform do
   def get_workspace!(id), do: Repo.get!(Workspace, id)
 
   @doc """
+  Gets a single workspace only if the user is a member of it.
+  """
+  def get_workspace_with_member(%User{} = user, workspace_id) do
+    from(w in Workspace,
+      join: u in assoc(w, :members),
+      where: w.id == ^workspace_id and u.id == ^user.id)
+      |> Repo.one()
+  end
+
+  @doc """
   Creates a workspace.
 
   ## Examples
@@ -49,10 +59,29 @@ defmodule Snickr.Platform do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_workspace(attrs \\ %{}) do
-    %Workspace{}
-    |> Workspace.changeset(attrs)
-    |> Repo.insert()
+  def create_workspace(%User{} = created_by_user, attrs \\ %{}) do
+    # Transaction to create the workspace, add the user who created the
+    # workspace as a member and an admin
+    Repo.transaction(fn ->
+      workspace = 
+        %Workspace{}
+        |> Workspace.create_changeset(created_by_user, attrs)
+        |> Repo.insert!()
+
+      %Membership{}
+      |> Membership.create_changeset(created_by_user, workspace)
+      |> Repo.insert!()
+
+      %Admin{}
+      |> Admin.create_changeset(created_by_user, workspace)
+      |> Repo.insert!()
+
+      workspace
+    end)
+  end
+
+  def preload_channels(%Workspace{} = workspace) do
+    Repo.preload(workspace, :channels)
   end
 
   @doc """

@@ -52,23 +52,6 @@ defmodule Snickr.Accounts do
   end
 
   @doc """
-  Gets a single user with a password hash.
-
-  Raises `Ecto.NoResultsError` if the User does not exist.
-
-  ## Examples
-
-      iex> get_user!(123)
-      %User{}
-
-      iex> get_user!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_user!(id), do: Repo.get!(User, id)
-
-
-  @doc """
   Creates a user.
 
   ## Examples
@@ -106,24 +89,6 @@ defmodule Snickr.Accounts do
   end
 
   @doc """
-  Updates a user.
-
-  ## Examples
-
-      iex> update_user(user, %{field: new_value})
-      {:ok, %User{}}
-
-      iex> update_user(user, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_user(%User{} = user, attrs) do
-    user
-    |> User.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
   Deletes a User.
 
   ## Examples
@@ -137,19 +102,6 @@ defmodule Snickr.Accounts do
   """
   def delete_user(%User{} = user) do
     Repo.delete(user)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking user changes.
-
-  ## Examples
-
-      iex> change_user(user)
-      %Ecto.Changeset{source: %User{}}
-
-  """
-  def change_user(%User{} = user) do
-    User.changeset(user, %{})
   end
 
   alias Snickr.Accounts.Membership
@@ -184,42 +136,6 @@ defmodule Snickr.Accounts do
   def get_membership!(id), do: Repo.get!(Membership, id)
 
   @doc """
-  Creates a membership.
-
-  ## Examples
-
-      iex> create_membership(%{field: value})
-      {:ok, %Membership{}}
-
-      iex> create_membership(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_membership(attrs \\ %{}) do
-    %Membership{}
-    |> Membership.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  @doc """
-  Updates a membership.
-
-  ## Examples
-
-      iex> update_membership(membership, %{field: new_value})
-      {:ok, %Membership{}}
-
-      iex> update_membership(membership, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_membership(%Membership{} = membership, attrs) do
-    membership
-    |> Membership.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
   Deletes a Membership.
 
   ## Examples
@@ -233,19 +149,6 @@ defmodule Snickr.Accounts do
   """
   def delete_membership(%Membership{} = membership) do
     Repo.delete(membership)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking membership changes.
-
-  ## Examples
-
-      iex> change_membership(membership)
-      %Ecto.Changeset{source: %Membership{}}
-
-  """
-  def change_membership(%Membership{} = membership) do
-    Membership.changeset(membership, %{})
   end
 
   alias Snickr.Accounts.Admin
@@ -279,41 +182,6 @@ defmodule Snickr.Accounts do
   """
   def get_admin!(id), do: Repo.get!(Admin, id)
 
-  @doc """
-  Creates a admin.
-
-  ## Examples
-
-      iex> create_admin(%{field: value})
-      {:ok, %Admin{}}
-
-      iex> create_admin(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_admin(attrs \\ %{}) do
-    %Admin{}
-    |> Admin.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  @doc """
-  Updates a admin.
-
-  ## Examples
-
-      iex> update_admin(admin, %{field: new_value})
-      {:ok, %Admin{}}
-
-      iex> update_admin(admin, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_admin(%Admin{} = admin, attrs) do
-    admin
-    |> Admin.changeset(attrs)
-    |> Repo.update()
-  end
 
   @doc """
   Deletes a Admin.
@@ -329,19 +197,6 @@ defmodule Snickr.Accounts do
   """
   def delete_admin(%Admin{} = admin) do
     Repo.delete(admin)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking admin changes.
-
-  ## Examples
-
-      iex> change_admin(admin)
-      %Ecto.Changeset{source: %Admin{}}
-
-  """
-  def change_admin(%Admin{} = admin) do
-    Admin.changeset(admin, %{})
   end
 
   alias Snickr.Accounts.Subscription

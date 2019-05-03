@@ -1,7 +1,6 @@
 defmodule SnickrWeb.SessionController do
   use SnickrWeb, :controller
 
-  alias Snickr.Accounts
   alias SnickrWeb.Router.Helpers, as: Routes
 
   def new(conn, _attrs) do

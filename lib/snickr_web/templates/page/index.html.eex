@@ -5,18 +5,12 @@
 
 <section class="row">
   <article class="column">
-    <h2>Resources</h2>
-    <ul>
-      <li>
-        <a href="https://hexdocs.pm/phoenix/overview.html">Guides &amp; Docs</a>
-      </li>
-      <li>
-        <a href="https://github.com/phoenixframework/phoenix">Source</a>
-      </li>
-      <li>
-        <a href="https://github.com/phoenixframework/phoenix/blob/v1.4/CHANGELOG.md">v1.4 Changelog</a>
-      </li>
-    </ul>
+    <%= if @current_user do %>
+      <ul>
+        <li><%= link "Create a Workspace", to: Routes.workspace_path(@conn, :new) %></li>
+        <li><%= link "Your Workspaces", to: Routes.workspace_path(@conn, :index) %></li>
+      </ul>
+    <% end %>
   </article>
   <article class="column">
     <h2>Help</h2>

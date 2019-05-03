@@ -6,7 +6,7 @@ defmodule Snickr.Platform.Workspace do
   alias Snickr.Accounts.User
 
   schema "workspaces" do
-    field :description, :string
+    field :description, :string, null: false
     field :name, :string, null: false
     belongs_to :created_by_user, User
     has_many :channels, Channel
@@ -22,5 +22,12 @@ defmodule Snickr.Platform.Workspace do
     workspace
     |> cast(attrs, [:name, :description])
     |> validate_required([:name, :description])
+  end
+
+  def create_changeset(workspace, %User{} = created_by_user, attrs) do
+    workspace
+    |> changeset(attrs)
+    |> put_assoc(:created_by_user, created_by_user)
+    |> validate_required([:created_by_user])
   end
 end

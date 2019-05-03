@@ -14,9 +14,11 @@ defmodule Snickr.Accounts.Admin do
   end
 
   @doc false
-  def changeset(admin, attrs) do
+  def create_changeset(admin, user, workspace) do
     admin
-    |> cast(attrs, [])
-    |> validate_required([])
+    |> cast(%{}, [])
+    |> put_assoc(:user, user)
+    |> put_assoc(:workspace, workspace)
+    |> validate_required([:user, :workspace])
   end
 end
