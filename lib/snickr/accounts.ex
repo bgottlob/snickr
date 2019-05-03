@@ -6,7 +6,8 @@ defmodule Snickr.Accounts do
   import Ecto.Query, warn: false
   alias Snickr.Repo
 
-  alias Snickr.Accounts.User
+  alias Snickr.Accounts.{Admin, Membership, Subscription, User}
+  alias Snickr.Platform.{Channel, Message, Workspace}
 
   @doc """
   Returns the list of users.
@@ -109,8 +110,6 @@ defmodule Snickr.Accounts do
     Repo.delete(user)
   end
 
-  alias Snickr.Accounts.Membership
-
   @doc """
   Returns the list of memberships.
 
@@ -155,8 +154,6 @@ defmodule Snickr.Accounts do
   def delete_membership(%Membership{} = membership) do
     Repo.delete(membership)
   end
-
-  alias Snickr.Accounts.Admin
 
   @doc """
   Returns the list of admins.
@@ -203,10 +200,8 @@ defmodule Snickr.Accounts do
     Repo.delete(admin)
   end
 
-  alias Snickr.Accounts.Subscription
-
   @doc """
-  Returns the list of subscriptions.
+  Returns the list of channels a user is subscribed to.
 
   ## Examples
 
@@ -214,25 +209,11 @@ defmodule Snickr.Accounts do
       [%Subscription{}, ...]
 
   """
-  def list_subscriptions do
-    Repo.all(Subscription)
+  def list_subscriber_channels(user_id) do
+    Repo.all from c in Channel,
+      join: u in assoc(c, :subscribers),
+      where: u.id == ^user_id
   end
-
-  @doc """
-  Gets a single subscription.
-
-  Raises `Ecto.NoResultsError` if the Subscription does not exist.
-
-  ## Examples
-
-      iex> get_subscription!(123)
-      %Subscription{}
-
-      iex> get_subscription!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_subscription!(id), do: Repo.get!(Subscription, id)
 
   @doc """
   Creates a subscription.
@@ -253,24 +234,6 @@ defmodule Snickr.Accounts do
   end
 
   @doc """
-  Updates a subscription.
-
-  ## Examples
-
-      iex> update_subscription(subscription, %{field: new_value})
-      {:ok, %Subscription{}}
-
-      iex> update_subscription(subscription, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_subscription(%Subscription{} = subscription, attrs) do
-    subscription
-    |> Subscription.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
   Deletes a Subscription.
 
   ## Examples
@@ -286,16 +249,18 @@ defmodule Snickr.Accounts do
     Repo.delete(subscription)
   end
 
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking subscription changes.
+  def member?(%User{} = user, %Workspace{} = workspace) do
+    !!Repo.one(from m in Membership,
+               where: m.user_id == ^user.id and m.workspace_id == ^workspace.id)
+  end
 
-  ## Examples
+  def admin?(%User{} = user, %Workspace{} = workspace) do
+    !!Repo.one(from a in Admin,
+               where: a.user_id == ^user.id and a.workspace_id == ^workspace.id)
+  end
 
-      iex> change_subscription(subscription)
-      %Ecto.Changeset{source: %Subscription{}}
-
-  """
-  def change_subscription(%Subscription{} = subscription) do
-    Subscription.changeset(subscription, %{})
+  def subscriber?(%User{} = user, %Channel{} = channel) do
+    !!Repo.one(from s in Subscription,
+               where: s.user_id == ^user.id and s.channel_id == ^channel.id)
   end
 end

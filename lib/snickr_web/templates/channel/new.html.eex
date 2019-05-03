@@ -1,0 +1,21 @@
+<h1>Create Channel</h1>
+
+<%= form_for @changeset, Routes.channel_path(@conn, :create, workspace_id: @workspace_id), [as: :channel], fn f -> %>
+  <%= if @changeset.action do %>
+    <div class="alert alert-danger">
+      <p>Something went wrong! Please check the errors below</p>
+    </div>
+  <% end %>
+  <div>
+    <%= text_input f, :name, placeholder: "Name" %>
+    <%= error_tag f, :name %>
+  </div>
+  <div>
+    <%= text_input f, :description, placeholder: "Description" %>
+    <%= error_tag f, :description %>
+  </div>
+  <div>
+    <%= select f, :type, ["Public": "public"] %>
+  </div>
+  <%= submit "Create" %>
+<% end %>

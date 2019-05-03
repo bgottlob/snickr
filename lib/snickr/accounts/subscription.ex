@@ -13,9 +13,11 @@ defmodule Snickr.Accounts.Subscription do
   end
 
   @doc false
-  def changeset(subscription, attrs) do
+  def create_changeset(subscription, user_id, channel_id) do
     subscription
-    |> cast(attrs, [])
-    |> validate_required([])
+    |> change(%{})
+    |> put_change(:user_id, user_id)
+    |> put_change(:channel_id, channel_id)
+    |> validate_required([:user_id, :channel_id])
   end
 end

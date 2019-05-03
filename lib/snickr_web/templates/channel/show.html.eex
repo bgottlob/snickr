@@ -1,0 +1,14 @@
+<h1><%= @channel.name %></h1>
+<p><em>Description:</em> <%= @channel.description %></p>
+
+<div>
+  <ul>
+    <li>Person: Message 1</li>
+    <li>Person: Message 2</li>
+  </ul>
+</div>
+
+<%= form_for @changeset, "/", [as: :message], fn f -> %>
+  <%= textarea f, :content, placeholder: "Enter message" %>
+  <%= submit "Send" %>
+<% end %>
