@@ -16,7 +16,7 @@ defmodule Snickr.AccountsTest do
     @update_attrs %{
       email: "some updated email",
       first_name: "some updated first_name",
-      last_name: "some updated last_name",
+      last_name: "some updated last_name"
     }
     @invalid_attrs %{
       email: nil,
@@ -135,7 +135,9 @@ defmodule Snickr.AccountsTest do
     @tag :skip
     test "update_membership/2 with valid data updates the membership" do
       membership = membership_fixture()
-      assert {:ok, %Membership{} = membership} = Accounts.update_membership(membership, @update_attrs)
+
+      assert {:ok, %Membership{} = membership} =
+               Accounts.update_membership(membership, @update_attrs)
     end
 
     @tag :skip
@@ -265,13 +267,18 @@ defmodule Snickr.AccountsTest do
     @tag :skip
     test "update_subscription/2 with valid data updates the subscription" do
       subscription = subscription_fixture()
-      assert {:ok, %Subscription{} = subscription} = Accounts.update_subscription(subscription, @update_attrs)
+
+      assert {:ok, %Subscription{} = subscription} =
+               Accounts.update_subscription(subscription, @update_attrs)
     end
 
     @tag :skip
     test "update_subscription/2 with invalid data returns error changeset" do
       subscription = subscription_fixture()
-      assert {:error, %Ecto.Changeset{}} = Accounts.update_subscription(subscription, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               Accounts.update_subscription(subscription, @invalid_attrs)
+
       assert subscription == Accounts.get_subscription!(subscription.id)
     end
 

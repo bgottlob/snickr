@@ -15,9 +15,11 @@ defmodule Snickr.Platform do
   Returns the list of workspaces the user is a member of.
   """
   def list_workspaces(%User{} = user) do
-    q = from w in Workspace,
-      join: u in assoc(w, :members),
-      where: u.id == ^user.id
+    q =
+      from w in Workspace,
+        join: u in assoc(w, :members),
+        where: u.id == ^user.id
+
     Repo.all(q)
   end
 
@@ -43,8 +45,9 @@ defmodule Snickr.Platform do
   def get_workspace_with_member(%User{} = user, workspace_id) do
     from(w in Workspace,
       join: u in assoc(w, :members),
-      where: w.id == ^workspace_id and u.id == ^user.id)
-      |> Repo.one()
+      where: w.id == ^workspace_id and u.id == ^user.id
+    )
+    |> Repo.one()
   end
 
   @doc """
@@ -63,7 +66,7 @@ defmodule Snickr.Platform do
     # Transaction to create the workspace, add the user who created the
     # workspace as a member and an admin
     Repo.transaction(fn ->
-      workspace = 
+      workspace =
         %Workspace{}
         |> Workspace.create_changeset(created_by_user, attrs)
         |> Repo.insert!()

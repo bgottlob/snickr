@@ -16,6 +16,7 @@ defmodule SnickrWeb.UserController do
         conn
         |> put_flash(:info, "You have successfully created a user account #{user.username}")
         |> redirect(to: Routes.page_path(conn, :index))
+
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)
     end

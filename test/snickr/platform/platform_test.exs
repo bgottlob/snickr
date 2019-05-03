@@ -77,7 +77,11 @@ defmodule Snickr.PlatformTest do
     alias Snickr.Platform.Channel
 
     @valid_attrs %{description: "some description", name: "some name", type: "some type"}
-    @update_attrs %{description: "some updated description", name: "some updated name", type: "some updated type"}
+    @update_attrs %{
+      description: "some updated description",
+      name: "some updated name",
+      type: "some updated type"
+    }
     @invalid_attrs %{description: nil, name: nil, type: nil}
 
     def channel_fixture(attrs \\ %{}) do
