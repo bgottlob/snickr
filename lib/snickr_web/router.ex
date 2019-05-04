@@ -21,6 +21,7 @@ defmodule SnickrWeb.Router do
     resources "/users", UserController, only: [:new, :create, :show]
     resources "/sessions", SessionController, only: [:new, :create, :delete]
     resources "/workspaces", WorkspaceController, only: [:index, :new, :create, :show]
+    resources "/channels", ChannelController, only: [:new, :create, :show]
   end
 
   # Other scopes may use custom stacks.

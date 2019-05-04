@@ -6,10 +6,8 @@ defmodule Snickr.Platform do
   import Ecto.Query, warn: false
   alias Snickr.Repo
 
-  alias Snickr.Platform.Workspace
-  alias Snickr.Accounts.User
-  alias Snickr.Accounts.Admin
-  alias Snickr.Accounts.Membership
+  alias Snickr.Platform.{Channel, Message, Workspace}
+  alias Snickr.Accounts.{Admin, Membership, Subscription, User}
 
   @doc """
   Returns the list of workspaces the user is a member of.
@@ -134,8 +132,6 @@ defmodule Snickr.Platform do
     Workspace.changeset(workspace, %{})
   end
 
-  alias Snickr.Platform.Channel
-
   @doc """
   Returns the list of channels.
 
@@ -166,21 +162,39 @@ defmodule Snickr.Platform do
   def get_channel!(id), do: Repo.get!(Channel, id)
 
   @doc """
-  Creates a channel.
-
-  ## Examples
-
-      iex> create_channel(%{field: value})
-      {:ok, %Channel{}}
-
-      iex> create_channel(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
+  Gets a single channel only if the user is a member of it.
   """
-  def create_channel(attrs \\ %{}) do
-    %Channel{}
-    |> Channel.changeset(attrs)
-    |> Repo.insert()
+  def get_channel_with_subscriber(%User{} = user, channel_id) do
+    from(c in Channel,
+      join: u in assoc(c, :subscribers),
+      where: c.id == ^channel_id and u.id == ^user.id)
+      |> Repo.one()
+  end
+
+  @doc """
+  Creates a channel.
+  """
+  # TODO
+  #def create_channel(%{"type" => "direct"} = attrs, from_user_id, to_user_id, workspace_id) do
+  #  %Channel{}
+  #  |> Channel.changeset(attrs)
+  #  |> Repo.insert()
+  #end
+  # TODO verify the created_by_user is a member of the workspace this channel
+  # is being created in
+  def create_channel(created_by_user_id, workspace_id, attrs) do
+    Repo.transaction(fn -> 
+      channel =
+        %Channel{}
+        |> Channel.create_changeset(created_by_user_id, workspace_id, attrs)
+        |> Repo.insert!()
+
+      %Subscription{}
+      |> Subscription.create_changeset(created_by_user_id, channel.id)
+      |> Repo.insert!()
+
+      channel
+    end)
   end
 
   @doc """
@@ -229,8 +243,6 @@ defmodule Snickr.Platform do
   def change_channel(%Channel{} = channel) do
     Channel.changeset(channel, %{})
   end
-
-  alias Snickr.Platform.Message
 
   @doc """
   Returns the list of messages.

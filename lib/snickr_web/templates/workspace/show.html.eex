@@ -4,8 +4,8 @@
 <h2>Channels</h2>
 <ul>
   <%= for c <- @workspace.channels do %>
-    <li><%= c.name %></li>
+    <li><%= link c.name, to: Routes.channel_path(@conn, :show, c.id) %></li>
   <% end %>
 </ul>
 
-Create a Channel (link not implemented yet)
+<%= link "Create a Channel", to: Routes.channel_path(@conn, :new, workspace_id: @workspace.id) %>
