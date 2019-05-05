@@ -8,7 +8,12 @@
   </ul>
 </div>
 
-<%= form_for @changeset, "/", [as: :message], fn f -> %>
-  <%= textarea f, :content, placeholder: "Enter message" %>
-  <%= submit "Send" %>
-<% end %>
+<%# <%= form_for @changeset, "/", [as: :message], fn f -> %> 
+  <%# <%= textarea f, :content, placeholder: "Enter message" %> 
+  <%# <%= submit "Send" %> 
+<%# <% end %> 
+
+<div class='col-lg-6'>
+  <div id = 'messages'></div>
+  <input id='chat-input' type='text'></input>
+</div>

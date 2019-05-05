@@ -2,7 +2,7 @@ defmodule SnickrWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", SnickrWeb.RoomChannel
+  channel "room:*", SnickrWeb.RoomChannel
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After
