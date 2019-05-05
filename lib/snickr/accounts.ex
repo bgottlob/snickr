@@ -210,9 +210,11 @@ defmodule Snickr.Accounts do
 
   """
   def list_subscriber_channels(user_id) do
-    Repo.all from c in Channel,
-      join: u in assoc(c, :subscribers),
-      where: u.id == ^user_id
+    Repo.all(
+      from c in Channel,
+        join: u in assoc(c, :subscribers),
+        where: u.id == ^user_id
+    )
   end
 
   @doc """
@@ -250,17 +252,23 @@ defmodule Snickr.Accounts do
   end
 
   def member?(%User{} = user, %Workspace{} = workspace) do
-    !!Repo.one(from m in Membership,
-               where: m.user_id == ^user.id and m.workspace_id == ^workspace.id)
+    !!Repo.one(
+      from m in Membership,
+        where: m.user_id == ^user.id and m.workspace_id == ^workspace.id
+    )
   end
 
   def admin?(%User{} = user, %Workspace{} = workspace) do
-    !!Repo.one(from a in Admin,
-               where: a.user_id == ^user.id and a.workspace_id == ^workspace.id)
+    !!Repo.one(
+      from a in Admin,
+        where: a.user_id == ^user.id and a.workspace_id == ^workspace.id
+    )
   end
 
   def subscriber?(%User{} = user, %Channel{} = channel) do
-    !!Repo.one(from s in Subscription,
-               where: s.user_id == ^user.id and s.channel_id == ^channel.id)
+    !!Repo.one(
+      from s in Subscription,
+        where: s.user_id == ^user.id and s.channel_id == ^channel.id
+    )
   end
 end

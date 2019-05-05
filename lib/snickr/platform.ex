@@ -167,23 +167,24 @@ defmodule Snickr.Platform do
   def get_channel_with_subscriber(%User{} = user, channel_id) do
     from(c in Channel,
       join: u in assoc(c, :subscribers),
-      where: c.id == ^channel_id and u.id == ^user.id)
-      |> Repo.one()
+      where: c.id == ^channel_id and u.id == ^user.id
+    )
+    |> Repo.one()
   end
 
   @doc """
   Creates a channel.
   """
   # TODO
-  #def create_channel(%{"type" => "direct"} = attrs, from_user_id, to_user_id, workspace_id) do
+  # def create_channel(%{"type" => "direct"} = attrs, from_user_id, to_user_id, workspace_id) do
   #  %Channel{}
   #  |> Channel.changeset(attrs)
   #  |> Repo.insert()
-  #end
+  # end
   # TODO verify the created_by_user is a member of the workspace this channel
   # is being created in
   def create_channel(created_by_user_id, workspace_id, attrs) do
-    Repo.transaction(fn -> 
+    Repo.transaction(fn ->
       channel =
         %Channel{}
         |> Channel.create_changeset(created_by_user_id, workspace_id, attrs)
@@ -245,16 +246,16 @@ defmodule Snickr.Platform do
   end
 
   @doc """
-  Returns the list of messages.
-
-  ## Examples
-
-      iex> list_messages()
-      [%Message{}, ...]
-
+  Returns the most recent messages in a given channel.
   """
-  def list_messages do
-    Repo.all(Message)
+  def list_messages_in_channel(channel_id, opts \\ [limit: 15]) do
+    Repo.all(
+      from m in Message,
+        where: m.channel_id == ^channel_id,
+        preload: [:sent_by_user],
+        limit: ^opts[:limit],
+        order_by: [desc: m.inserted_at]
+    )
   end
 
   @doc """
@@ -285,9 +286,9 @@ defmodule Snickr.Platform do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_message(attrs \\ %{}) do
+  def create_message(sent_by_user_id, channel_id, attrs \\ %{}) do
     %Message{}
-    |> Message.changeset(attrs)
+    |> Message.create_changeset(sent_by_user_id, channel_id, attrs)
     |> Repo.insert()
   end
 
