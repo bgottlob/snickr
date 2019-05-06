@@ -1,19 +1,9 @@
+<%= content_tag :div, id: "channel-data", data: [id: @channel.id] do %>
+<% end %>
+<%= content_tag :div, id: "user-data", data: [id: @conn.assigns.current_user.id] do %>
+<% end %>
 <h1><%= @channel.name %></h1>
 <p><em>Description:</em> <%= @channel.description %></p>
 
-<div>
-  <ul>
-    <li>Person: Message 1</li>
-    <li>Person: Message 2</li>
-  </ul>
-</div>
-
-<%# <%= form_for @changeset, "/", [as: :message], fn f -> %> 
-  <%# <%= textarea f, :content, placeholder: "Enter message" %> 
-  <%# <%= submit "Send" %> 
-<%# <% end %> 
-
-<div class='col-lg-6'>
-  <div id = 'messages'></div>
-  <input id='chat-input' type='text'></input>
-</div>
+<div id="messages"></div>
+<input id="chat-input" placeholder="Enter message" type="text">

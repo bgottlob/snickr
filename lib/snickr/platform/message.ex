@@ -25,4 +25,12 @@ defmodule Snickr.Platform.Message do
     |> cast(attrs, [:content, :edited])
     |> validate_required([:content, :edited])
   end
+
+  def create_changeset(message, sent_by_user_id, channel_id, attrs) do
+    message
+    |> __MODULE__.changeset(attrs)
+    |> put_change(:sent_by_user_id, sent_by_user_id)
+    |> put_change(:channel_id, channel_id)
+    |> validate_required([:sent_by_user_id, :channel_id])
+  end
 end
