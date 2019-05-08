@@ -1,6 +1,7 @@
 defmodule SnickrWeb.ChannelController do
   use SnickrWeb, :controller
 
+  alias Snickr.Accounts
   alias Snickr.Platform
   alias Snickr.Platform.{Channel, Message}
 
@@ -12,19 +13,35 @@ defmodule SnickrWeb.ChannelController do
     render(conn, "new.html",
       workspace_id: workspace_id,
       changeset:
-        Channel.create_changeset(%Channel{}, conn.assigns.current_user.id, workspace_id, %{})
+      Channel.changeset(%Channel{}, %{created_by_user_id: conn.assigns.current_user.id, workspace_id: workspace_id})
     )
   end
 
-  def create(conn, %{"channel" => channel_attrs, "workspace_id" => workspace_id}) do
-    {workspace_id, _} = Integer.parse(workspace_id)
+  def create(conn, %{"channel" => %{"type" => "direct"} = attrs}) do
+    attrs = Map.put(attrs, "from_user_id", conn.assigns.current_user.id)
+    to_user = Accounts.get_user(Map.fetch!(attrs, "to_user_id"))
+    case Platform.create_channel(attrs) do
+      {:ok, %{:channel => channel}} ->
+        conn
+        |> put_flash(:info, "Welcome to your first message with #{to_user.first_name}!")
+        |> redirect(to: Routes.channel_path(conn, :show, channel.id))
+      {:error, :direct_channel_already_exists, channel_id} ->
+        conn
+        |> redirect(to: Routes.channel_path(conn, :show, channel_id))
+      {:error, _reason} ->
+        conn
+        |> put_flash(:error, "An error occurred")
+        |> redirect(to: Routes.workspace_path(conn, :show, Map.fetch(attrs, "workspace_id")))
+    end
+  end
 
-    case Platform.create_channel(conn.assigns.current_user.id, workspace_id, channel_attrs) do
-      {:ok, channel} ->
+  def create(conn, %{"channel" => attrs}) do
+    attrs = Map.put(attrs, "created_by_user_id", conn.assigns.current_user.id)
+    case Platform.create_channel(attrs) do
+      {:ok, %{:channel => channel}} ->
         conn
         |> put_flash(:info, "You have successfully created the #{channel.name} channel")
         |> redirect(to: Routes.channel_path(conn, :show, channel.id))
-
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)
     end

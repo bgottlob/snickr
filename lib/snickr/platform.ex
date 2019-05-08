@@ -4,9 +4,11 @@ defmodule Snickr.Platform do
   """
 
   import Ecto.Query, warn: false
+
   alias Snickr.Repo
 
   alias Snickr.Platform.{Channel, Message, Workspace}
+  alias Snickr.Accounts
   alias Snickr.Accounts.{Admin, Membership, Subscription, User}
 
   @doc """
@@ -175,27 +177,75 @@ defmodule Snickr.Platform do
   @doc """
   Creates a channel.
   """
-  # TODO
-  # def create_channel(%{"type" => "direct"} = attrs, from_user_id, to_user_id, workspace_id) do
-  #  %Channel{}
-  #  |> Channel.changeset(attrs)
-  #  |> Repo.insert()
-  # end
-  # TODO verify the created_by_user is a member of the workspace this channel
-  # is being created in
-  def create_channel(created_by_user_id, workspace_id, attrs) do
-    Repo.transaction(fn ->
-      channel =
-        %Channel{}
-        |> Channel.create_changeset(created_by_user_id, workspace_id, attrs)
-        |> Repo.insert!()
+  # TODO verify both users are members of the workspace this channel is being
+  # created in
+  def create_channel(%{"type" => "direct"} = attrs) do
+    workspace = Repo.get!(Workspace, Map.fetch!(attrs, "workspace_id"))
+    to_user = Repo.get!(User, Map.fetch!(attrs, "to_user_id"))
+    from_user = Repo.get!(User, Map.fetch!(attrs, "from_user_id"))
+    cond do
+      !Accounts.member?(to_user, workspace) ->
+        {:error, :to_user_unauthorized}
+      !Accounts.member?(from_user, workspace) ->
+        {:error, :from_user_unauthorized}
+      channel = Repo.one(from c in Channel,
+        join: s1 in Subscription, on: [channel_id: c.id],
+        join: s2 in Subscription, on: [channel_id: c.id],
+        where: c.type == "direct" and c.workspace_id == ^workspace.id and
+          s1.user_id == ^to_user.id and s2.user_id == ^from_user.id
+      ) ->
+        {:error, :direct_channel_already_exists, channel.id}
+      true ->
+        Repo.transaction(fn ->
+          channel =
+            %Channel{}
+            |> Channel.changeset(%{
+              type: "direct",
+              name: "#{from_user.username}_#{to_user.username}",
+              description: "Direct messages between #{from_user.username} and #{to_user.username}",
+              created_by_user_id: from_user.id,
+              workspace_id: workspace.id
+            })
+            |> Repo.insert!()
 
-      %Subscription{}
-      |> Subscription.create_changeset(created_by_user_id, channel.id)
-      |> Repo.insert!()
+          from_user_subscription =
+            %Subscription{}
+            |> Subscription.changeset(%{user_id: from_user.id, channel_id: channel.id})
+            |> Repo.insert!()
 
-      channel
-    end)
+          to_user_subscription =
+            %Subscription{}
+            |> Subscription.changeset(%{user_id: to_user.id, channel_id: channel.id})
+            |> Repo.insert!()
+
+          %{channel: channel,
+            from_user_subscription: from_user_subscription,
+            to_user_subscription: to_user_subscription}
+        end)
+    end
+  end
+
+  def create_channel(attrs) do
+    workspace = Repo.get!(Workspace, Map.fetch!(attrs, "workspace_id"))
+    created_by_user = Repo.get!(User, Map.fetch!(attrs, "created_by_user_id"))
+    cond do
+      !Accounts.member?(created_by_user, workspace) ->
+        {:error, :created_by_user_unauthorized}
+      true ->
+        Repo.transaction(fn ->
+          channel =
+            %Channel{}
+            |> Channel.changeset(attrs)
+            |> Repo.insert!()
+
+          subscription =
+            %Subscription{}
+            |> Subscription.changeset(%{user_id: created_by_user.id, channel_id: channel.id})
+            |> Repo.insert!()
+
+          %{channel: channel, subscription: subscription}
+        end)
+    end
   end
 
   @doc """

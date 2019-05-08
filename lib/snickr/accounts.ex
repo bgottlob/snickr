@@ -559,4 +559,25 @@ defmodule Snickr.Accounts do
   def change_admin_invitation(%AdminInvitation{} = admin_invitation) do
     AdminInvitation.changeset(admin_invitation, %{})
   end
+
+  def list_users(term, workspace_id \\ nil) do
+    term = "#{term}%"
+
+    query =
+      from(u in User,
+        where:
+          ilike(u.username, ^term) or
+            ilike(fragment("? || ' ' || ?", u.first_name, u.last_name), ^term)
+      )
+
+    if workspace_id do
+      from(u in query,
+        join: m in Membership,
+        where: m.user_id == u.id and m.workspace_id == ^workspace_id
+      )
+      |> Repo.all()
+    else
+      Repo.all(query)
+    end
+  end
 end
