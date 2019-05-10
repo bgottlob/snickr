@@ -3,7 +3,7 @@ defmodule Snickr.Platform.Workspace do
   import Ecto.Changeset
 
   alias Snickr.Platform.Channel
-  alias Snickr.Accounts.User
+  alias Snickr.Accounts.{AdminInvitation, MembershipInvitation, User}
 
   schema "workspaces" do
     field :description, :string, null: false
@@ -13,6 +13,9 @@ defmodule Snickr.Platform.Workspace do
 
     many_to_many :members, User, join_through: "memberships"
     many_to_many :admins, User, join_through: "admins"
+
+    has_many :membership_invitations, MembershipInvitation, foreign_key: :workspace_id
+    has_many :admin_invitations, AdminInvitation, foreign_key: :workspace_id
 
     timestamps(type: :utc_datetime)
   end
