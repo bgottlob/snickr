@@ -1,0 +1,7 @@
+<h1>Your Invitations</h1>
+
+<ul>
+<%= for m <- @membershipinvitations do %>
+  <li><%= link m.status, to: Routes.invite_path(@conn) %></li>
+<% end %>
+</ul>
