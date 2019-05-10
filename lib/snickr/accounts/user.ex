@@ -4,6 +4,7 @@ defmodule Snickr.Accounts.User do
 
   alias Snickr.Platform.Workspace
   alias Snickr.Platform.Channel
+  alias Snickr.Accounts.{AdminInvitation, MembershipInvitation, SubscriptionInvitation}
 
   schema "users" do
     field :email, :string, null: false
@@ -16,6 +17,13 @@ defmodule Snickr.Accounts.User do
 
     has_many :created_workspaces, Workspace, foreign_key: :created_by_user_id
     has_many :created_channels, Channel, foreign_key: :created_by_user_id
+    has_many :sent_subscription_invitations, SubscriptionInvitation, foreign_key: :invited_by_user_id
+    has_many :sent_membership_invitations, MembershipInvitation, foreign_key: :invited_by_user_id
+    has_many :sent_admin_invitations, AdminInvitation, foreign_key: :invited_by_user_id
+
+    has_many :subscription_invitations, SubscriptionInvitation, foreign_key: :user_id
+    has_many :membership_invitations, MembershipInvitation, foreign_key: :user_id
+    has_many :admin_invitations, AdminInvitation, foreign_key: :user_id
 
     many_to_many :member_of_workspaces, Workspace, join_through: "memberships"
     many_to_many :admin_of_workspaces, Workspace, join_through: "admins"

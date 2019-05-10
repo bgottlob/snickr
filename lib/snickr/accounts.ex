@@ -271,4 +271,292 @@ defmodule Snickr.Accounts do
         where: s.user_id == ^user.id and s.channel_id == ^channel.id
     )
   end
+
+  alias Snickr.Accounts.SubscriptionInvitation
+
+  @doc """
+  Returns the list of subscriptioninvitations.
+
+  ## Examples
+
+      iex> list_subscriptioninvitations()
+      [%SubscriptionInvitation{}, ...]
+
+  """
+  def list_subscriptioninvitations do
+    Repo.all(SubscriptionInvitation)
+  end
+
+  @doc """
+  Gets a single subscription_invitation.
+
+  Raises `Ecto.NoResultsError` if the Subscription invitation does not exist.
+
+  ## Examples
+
+      iex> get_subscription_invitation!(123)
+      %SubscriptionInvitation{}
+
+      iex> get_subscription_invitation!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_subscription_invitation!(id), do: Repo.get!(SubscriptionInvitation, id)
+
+  @doc """
+  Creates a subscription_invitation.
+
+  ## Examples
+
+      iex> create_subscription_invitation(%{field: value})
+      {:ok, %SubscriptionInvitation{}}
+
+      iex> create_subscription_invitation(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_subscription_invitation(attrs \\ %{}) do
+    %SubscriptionInvitation{}
+    |> SubscriptionInvitation.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a subscription_invitation.
+
+  ## Examples
+
+      iex> update_subscription_invitation(subscription_invitation, %{field: new_value})
+      {:ok, %SubscriptionInvitation{}}
+
+      iex> update_subscription_invitation(subscription_invitation, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_subscription_invitation(%SubscriptionInvitation{} = subscription_invitation, attrs) do
+    subscription_invitation
+    |> SubscriptionInvitation.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a SubscriptionInvitation.
+
+  ## Examples
+
+      iex> delete_subscription_invitation(subscription_invitation)
+      {:ok, %SubscriptionInvitation{}}
+
+      iex> delete_subscription_invitation(subscription_invitation)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_subscription_invitation(%SubscriptionInvitation{} = subscription_invitation) do
+    Repo.delete(subscription_invitation)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking subscription_invitation changes.
+
+  ## Examples
+
+      iex> change_subscription_invitation(subscription_invitation)
+      %Ecto.Changeset{source: %SubscriptionInvitation{}}
+
+  """
+  def change_subscription_invitation(%SubscriptionInvitation{} = subscription_invitation) do
+    SubscriptionInvitation.changeset(subscription_invitation, %{})
+  end
+
+  alias Snickr.Accounts.MembershipInvitation
+
+  @doc """
+  Returns the list of membershipinvitations.
+
+  ## Examples
+
+      iex> list_membershipinvitations()
+      [%MembershipInvitation{}, ...]
+
+  """
+  def list_membershipinvitations do
+    Repo.all(MembershipInvitation)
+  end
+
+  @doc """
+  Gets a single membership_invitation.
+
+  Raises `Ecto.NoResultsError` if the Membership invitation does not exist.
+
+  ## Examples
+
+      iex> get_membership_invitation!(123)
+      %MembershipInvitation{}
+
+      iex> get_membership_invitation!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_membership_invitation!(id), do: Repo.get!(MembershipInvitation, id)
+
+  @doc """
+  Creates a membership_invitation.
+
+  ## Examples
+
+      iex> create_membership_invitation(%{field: value})
+      {:ok, %MembershipInvitation{}}
+
+      iex> create_membership_invitation(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_membership_invitation(attrs \\ %{}) do
+    %MembershipInvitation{}
+    |> MembershipInvitation.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a membership_invitation.
+
+  ## Examples
+
+      iex> update_membership_invitation(membership_invitation, %{field: new_value})
+      {:ok, %MembershipInvitation{}}
+
+      iex> update_membership_invitation(membership_invitation, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_membership_invitation(%MembershipInvitation{} = membership_invitation, attrs) do
+    membership_invitation
+    |> MembershipInvitation.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a MembershipInvitation.
+
+  ## Examples
+
+      iex> delete_membership_invitation(membership_invitation)
+      {:ok, %MembershipInvitation{}}
+
+      iex> delete_membership_invitation(membership_invitation)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_membership_invitation(%MembershipInvitation{} = membership_invitation) do
+    Repo.delete(membership_invitation)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking membership_invitation changes.
+
+  ## Examples
+
+      iex> change_membership_invitation(membership_invitation)
+      %Ecto.Changeset{source: %MembershipInvitation{}}
+
+  """
+  def change_membership_invitation(%MembershipInvitation{} = membership_invitation) do
+    MembershipInvitation.changeset(membership_invitation, %{})
+  end
+
+  alias Snickr.Accounts.AdminInvitation
+
+  @doc """
+  Returns the list of admininvitations.
+
+  ## Examples
+
+      iex> list_admininvitations()
+      [%AdminInvitation{}, ...]
+
+  """
+  def list_admininvitations do
+    Repo.all(AdminInvitation)
+  end
+
+  @doc """
+  Gets a single admin_invitation.
+
+  Raises `Ecto.NoResultsError` if the Admin invitation does not exist.
+
+  ## Examples
+
+      iex> get_admin_invitation!(123)
+      %AdminInvitation{}
+
+      iex> get_admin_invitation!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_admin_invitation!(id), do: Repo.get!(AdminInvitation, id)
+
+  @doc """
+  Creates a admin_invitation.
+
+  ## Examples
+
+      iex> create_admin_invitation(%{field: value})
+      {:ok, %AdminInvitation{}}
+
+      iex> create_admin_invitation(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_admin_invitation(attrs \\ %{}) do
+    %AdminInvitation{}
+    |> AdminInvitation.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a admin_invitation.
+
+  ## Examples
+
+      iex> update_admin_invitation(admin_invitation, %{field: new_value})
+      {:ok, %AdminInvitation{}}
+
+      iex> update_admin_invitation(admin_invitation, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_admin_invitation(%AdminInvitation{} = admin_invitation, attrs) do
+    admin_invitation
+    |> AdminInvitation.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a AdminInvitation.
+
+  ## Examples
+
+      iex> delete_admin_invitation(admin_invitation)
+      {:ok, %AdminInvitation{}}
+
+      iex> delete_admin_invitation(admin_invitation)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_admin_invitation(%AdminInvitation{} = admin_invitation) do
+    Repo.delete(admin_invitation)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking admin_invitation changes.
+
+  ## Examples
+
+      iex> change_admin_invitation(admin_invitation)
+      %Ecto.Changeset{source: %AdminInvitation{}}
+
+  """
+  def change_admin_invitation(%AdminInvitation{} = admin_invitation) do
+    AdminInvitation.changeset(admin_invitation, %{})
+  end
 end
