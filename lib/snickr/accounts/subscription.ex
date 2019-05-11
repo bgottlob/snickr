@@ -13,6 +13,15 @@ defmodule Snickr.Accounts.Subscription do
   end
 
   @doc false
+  def changeset(subscription, attrs) do
+    subscription
+    |> cast(attrs, [:user_id, :channel_id])
+    |> assoc_constraint(:user)
+    |> assoc_constraint(:channel)
+  end
+
+  @doc false
+  # TODO remove this and use changeset instead
   def create_changeset(subscription, user_id, channel_id) do
     subscription
     |> change(%{})

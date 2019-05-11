@@ -47,7 +47,8 @@ defmodule Snickr.MixProject do
       ## faker is a runtime dep because it is used in the seeds file
       {:faker, "~> 0.12"},
       {:comeonin, "~> 5.1"},
-      {:pbkdf2_elixir, "~> 1.0"}
+      {:pbkdf2_elixir, "~> 1.0"},
+      {:poison, "~> 4.0"}
     ]
   end
 

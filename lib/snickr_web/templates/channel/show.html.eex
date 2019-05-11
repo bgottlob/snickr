@@ -2,8 +2,13 @@
 <% end %>
 <%= content_tag :div, id: "user-data", data: [id: @conn.assigns.current_user.id] do %>
 <% end %>
+
+<%= if @channel.type == "direct" do %>
+<h1><%= direct_recipient(@channel, @current_user) %></h1>
+<% else %>
 <h1><%= @channel.name %></h1>
 <p><em>Description:</em> <%= @channel.description %></p>
+<% end %>
 
 <div id="messages"></div>
 <input id="chat-input" placeholder="Enter message" type="text">

@@ -23,16 +23,10 @@ defmodule Snickr.Platform.Channel do
   @doc false
   def changeset(channel, attrs) do
     channel
-    |> cast(attrs, [:name, :description, :type])
-    |> validate_required([:name, :description, :type])
+    |> cast(attrs, [:description, :name, :type, :created_by_user_id, :workspace_id])
+    |> validate_required([:name, :description, :type, :created_by_user_id, :workspace_id])
     |> validate_inclusion(:type, ["public", "private", "direct"])
-  end
-
-  def create_changeset(channel, created_by_user_id, workspace_id, attrs) do
-    channel
-    |> __MODULE__.changeset(attrs)
-    |> put_change(:created_by_user_id, created_by_user_id)
-    |> put_change(:workspace_id, workspace_id)
-    |> validate_required([:created_by_user_id, :workspace_id])
+    |> assoc_constraint(:created_by_user)
+    |> assoc_constraint(:workspace)
   end
 end

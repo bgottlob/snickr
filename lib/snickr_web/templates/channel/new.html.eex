@@ -1,6 +1,6 @@
 <h1>Create Channel</h1>
 
-<%= form_for @changeset, Routes.channel_path(@conn, :create, workspace_id: @workspace_id), [as: :channel], fn f -> %>
+<%= form_for @changeset, Routes.channel_path(@conn, :create), [as: :channel], fn f -> %>
   <%= if @changeset.action do %>
     <div class="alert alert-danger">
       <p>Something went wrong! Please check the errors below</p>
@@ -17,5 +17,6 @@
   <div>
     <%= select f, :type, ["Public": "public"] %>
   </div>
+  <%= hidden_input f, :workspace_id, value: @workspace_id %>
   <%= submit "Create" %>
 <% end %>

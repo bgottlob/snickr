@@ -2,7 +2,7 @@ defmodule SnickrWeb.WorkspaceController do
   use SnickrWeb, :controller
 
   alias Snickr.Platform
-  alias Snickr.Platform.Workspace
+  alias Snickr.Platform.{Channel, Workspace}
 
   plug :authenticate_user when action in [:new, :index, :show]
 
@@ -34,7 +34,8 @@ defmodule SnickrWeb.WorkspaceController do
         |> redirect(to: Routes.workspace_path(conn, :index))
 
       workspace ->
-        render(conn, "show.html", workspace: Platform.preload_channels(workspace))
+        render(conn, "show.html", workspace: Platform.preload_channels(workspace),
+          dm_changeset: Channel.changeset(%Channel{}, %{from_user_id: conn.assigns.current_user.id, workspace_id: workspace.id}))
     end
   end
 end
