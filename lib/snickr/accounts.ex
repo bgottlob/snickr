@@ -19,11 +19,9 @@ defmodule Snickr.Accounts do
 
   """
   def workspace_pending_invites(%User{} = user) do
-    Repo.all(from w in Workspace,
-    join: m in MembershipInvitation,
-    join: u in User,
-    where: m.workspace_id == w.id and m.user_id == ^user.id and m.invited_by_user_id == u.id and (m.status == "Pending" or m.status == "pending") , 
-    select: {m.status, u.username, w."name"})
+    Repo.all(from m in MembershipInvitation,
+  join: u in assoc(m, :user),
+  where: u.id == ^user.id and m.status == "pending")
   end
 
   def list_users do
