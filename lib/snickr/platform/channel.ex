@@ -3,7 +3,7 @@ defmodule Snickr.Platform.Channel do
   import Ecto.Changeset
 
   alias Snickr.Platform.Workspace
-  alias Snickr.Accounts.User
+  alias Snickr.Accounts.{SubscriptionInvitation, User}
 
   schema "channels" do
     field :description, :string
@@ -12,6 +12,8 @@ defmodule Snickr.Platform.Channel do
 
     belongs_to :created_by_user, User
     belongs_to :workspace, Workspace
+
+    has_many :invitations, SubscriptionInvitation, foreign_key: :channel_id
 
     many_to_many :subscribers, User, join_through: "subscriptions"
 

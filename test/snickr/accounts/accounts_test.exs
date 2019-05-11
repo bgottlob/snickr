@@ -295,4 +295,205 @@ defmodule Snickr.AccountsTest do
       assert %Ecto.Changeset{} = Accounts.change_subscription(subscription)
     end
   end
+
+  describe "subscriptioninvitations" do
+    alias Snickr.Accounts.SubscriptionInvitation
+
+    @valid_attrs %{status: "some status"}
+    @update_attrs %{status: "some updated status"}
+    @invalid_attrs %{status: nil}
+
+    def subscription_invitation_fixture(attrs \\ %{}) do
+      {:ok, subscription_invitation} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Accounts.create_subscription_invitation()
+
+      subscription_invitation
+    end
+
+    @tag :skip
+    test "list_subscriptioninvitations/0 returns all subscriptioninvitations" do
+      subscription_invitation = subscription_invitation_fixture()
+      assert Accounts.list_subscriptioninvitations() == [subscription_invitation]
+    end
+
+    @tag :skip
+    test "get_subscription_invitation!/1 returns the subscription_invitation with given id" do
+      subscription_invitation = subscription_invitation_fixture()
+      assert Accounts.get_subscription_invitation!(subscription_invitation.id) == subscription_invitation
+    end
+
+    @tag :skip
+    test "create_subscription_invitation/1 with valid data creates a subscription_invitation" do
+      assert {:ok, %SubscriptionInvitation{} = subscription_invitation} = Accounts.create_subscription_invitation(@valid_attrs)
+      assert subscription_invitation.status == "some status"
+    end
+
+    @tag :skip
+    test "create_subscription_invitation/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Accounts.create_subscription_invitation(@invalid_attrs)
+    end
+
+    @tag :skip
+    test "update_subscription_invitation/2 with valid data updates the subscription_invitation" do
+      subscription_invitation = subscription_invitation_fixture()
+      assert {:ok, %SubscriptionInvitation{} = subscription_invitation} = Accounts.update_subscription_invitation(subscription_invitation, @update_attrs)
+      assert subscription_invitation.status == "some updated status"
+    end
+
+    @tag :skip
+    test "update_subscription_invitation/2 with invalid data returns error changeset" do
+      subscription_invitation = subscription_invitation_fixture()
+      assert {:error, %Ecto.Changeset{}} = Accounts.update_subscription_invitation(subscription_invitation, @invalid_attrs)
+      assert subscription_invitation == Accounts.get_subscription_invitation!(subscription_invitation.id)
+    end
+
+    @tag :skip
+    test "delete_subscription_invitation/1 deletes the subscription_invitation" do
+      subscription_invitation = subscription_invitation_fixture()
+      assert {:ok, %SubscriptionInvitation{}} = Accounts.delete_subscription_invitation(subscription_invitation)
+      assert_raise Ecto.NoResultsError, fn -> Accounts.get_subscription_invitation!(subscription_invitation.id) end
+    end
+
+    @tag :skip
+    test "change_subscription_invitation/1 returns a subscription_invitation changeset" do
+      subscription_invitation = subscription_invitation_fixture()
+      assert %Ecto.Changeset{} = Accounts.change_subscription_invitation(subscription_invitation)
+    end
+  end
+
+  describe "membershipinvitations" do
+    alias Snickr.Accounts.MembershipInvitation
+
+    @valid_attrs %{status: "some status"}
+    @update_attrs %{status: "some updated status"}
+    @invalid_attrs %{status: nil}
+
+    def membership_invitation_fixture(attrs \\ %{}) do
+      {:ok, membership_invitation} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Accounts.create_membership_invitation()
+
+      membership_invitation
+    end
+
+    @tag :skip
+    test "list_membershipinvitations/0 returns all membershipinvitations" do
+      membership_invitation = membership_invitation_fixture()
+      assert Accounts.list_membershipinvitations() == [membership_invitation]
+    end
+
+    @tag :skip
+    test "get_membership_invitation!/1 returns the membership_invitation with given id" do
+      membership_invitation = membership_invitation_fixture()
+      assert Accounts.get_membership_invitation!(membership_invitation.id) == membership_invitation
+    end
+
+    @tag :skip
+    test "create_membership_invitation/1 with valid data creates a membership_invitation" do
+      assert {:ok, %MembershipInvitation{} = membership_invitation} = Accounts.create_membership_invitation(@valid_attrs)
+      assert membership_invitation.status == "some status"
+    end
+
+    @tag :skip
+    test "create_membership_invitation/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Accounts.create_membership_invitation(@invalid_attrs)
+    end
+
+    @tag :skip
+    test "update_membership_invitation/2 with valid data updates the membership_invitation" do
+      membership_invitation = membership_invitation_fixture()
+      assert {:ok, %MembershipInvitation{} = membership_invitation} = Accounts.update_membership_invitation(membership_invitation, @update_attrs)
+      assert membership_invitation.status == "some updated status"
+    end
+
+    @tag :skip
+    test "update_membership_invitation/2 with invalid data returns error changeset" do
+      membership_invitation = membership_invitation_fixture()
+      assert {:error, %Ecto.Changeset{}} = Accounts.update_membership_invitation(membership_invitation, @invalid_attrs)
+      assert membership_invitation == Accounts.get_membership_invitation!(membership_invitation.id)
+    end
+
+    @tag :skip
+    test "delete_membership_invitation/1 deletes the membership_invitation" do
+      membership_invitation = membership_invitation_fixture()
+      assert {:ok, %MembershipInvitation{}} = Accounts.delete_membership_invitation(membership_invitation)
+      assert_raise Ecto.NoResultsError, fn -> Accounts.get_membership_invitation!(membership_invitation.id) end
+    end
+
+    @tag :skip
+    test "change_membership_invitation/1 returns a membership_invitation changeset" do
+      membership_invitation = membership_invitation_fixture()
+      assert %Ecto.Changeset{} = Accounts.change_membership_invitation(membership_invitation)
+    end
+  end
+
+  describe "admininvitations" do
+    alias Snickr.Accounts.AdminInvitation
+
+    @valid_attrs %{status: "some status"}
+    @update_attrs %{status: "some updated status"}
+    @invalid_attrs %{status: nil}
+
+    def admin_invitation_fixture(attrs \\ %{}) do
+      {:ok, admin_invitation} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Accounts.create_admin_invitation()
+
+      admin_invitation
+    end
+
+    @tag :skip
+    test "list_admininvitations/0 returns all admininvitations" do
+      admin_invitation = admin_invitation_fixture()
+      assert Accounts.list_admininvitations() == [admin_invitation]
+    end
+
+    @tag :skip
+    test "get_admin_invitation!/1 returns the admin_invitation with given id" do
+      admin_invitation = admin_invitation_fixture()
+      assert Accounts.get_admin_invitation!(admin_invitation.id) == admin_invitation
+    end
+
+    @tag :skip
+    test "create_admin_invitation/1 with valid data creates a admin_invitation" do
+      assert {:ok, %AdminInvitation{} = admin_invitation} = Accounts.create_admin_invitation(@valid_attrs)
+      assert admin_invitation.status == "some status"
+    end
+
+    @tag :skip
+    test "create_admin_invitation/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Accounts.create_admin_invitation(@invalid_attrs)
+    end
+
+    @tag :skip
+    test "update_admin_invitation/2 with valid data updates the admin_invitation" do
+      admin_invitation = admin_invitation_fixture()
+      assert {:ok, %AdminInvitation{} = admin_invitation} = Accounts.update_admin_invitation(admin_invitation, @update_attrs)
+      assert admin_invitation.status == "some updated status"
+    end
+
+    @tag :skip
+    test "update_admin_invitation/2 with invalid data returns error changeset" do
+      admin_invitation = admin_invitation_fixture()
+      assert {:error, %Ecto.Changeset{}} = Accounts.update_admin_invitation(admin_invitation, @invalid_attrs)
+      assert admin_invitation == Accounts.get_admin_invitation!(admin_invitation.id)
+    end
+
+    @tag :skip
+    test "delete_admin_invitation/1 deletes the admin_invitation" do
+      admin_invitation = admin_invitation_fixture()
+      assert {:ok, %AdminInvitation{}} = Accounts.delete_admin_invitation(admin_invitation)
+      assert_raise Ecto.NoResultsError, fn -> Accounts.get_admin_invitation!(admin_invitation.id) end
+    end
+
+    @tag :skip
+    test "change_admin_invitation/1 returns a admin_invitation changeset" do
+      admin_invitation = admin_invitation_fixture()
+      assert %Ecto.Changeset{} = Accounts.change_admin_invitation(admin_invitation)
+    end
+  end
 end
