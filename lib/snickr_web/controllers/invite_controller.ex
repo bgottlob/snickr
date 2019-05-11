@@ -9,7 +9,7 @@ defmodule SnickrWeb.InviteController do
     end
 
     def show(conn, %{"id" => id}) do
-        render(conn, "show.html", membershipinvitation: Accounts.get_membershipinvitation(id))
+        render(conn, "show.html", membershipinvitation: Accounts.get_membership_invitation(id))
     end
 
 end
