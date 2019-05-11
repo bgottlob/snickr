@@ -26,6 +26,8 @@ defmodule Snickr.Accounts do
     select: {m.status, u.username, w."name"})
   end
   
+  def get_membershipinvitation!(id), do: Repo.get!(MembershipInvitation, id)
+
   def list_users do
     Repo.all(User)
   end

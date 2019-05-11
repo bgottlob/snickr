@@ -5,11 +5,11 @@ defmodule SnickrWeb.InviteController do
     alias Snickr.Accounts.MembershipInvitation
     
     def index(conn, _attrs) do
-        render(conn, "index.html")
+        render(conn, "index.html", membershipinvitations: Accounts.workspace_pending_invites(conn.assigns.current_user))
     end
 
-    def show(conn, _params) do
-        render(conn, "show.html", membershipinvitations: Accounts.workspace_pending_invites(conn.assigns.current_user))
+    def show(conn, %{"id" => id}) do
+        render(conn, "show.html", membershipinvitation: Accounts.get_membershipinvitation(id))
     end
 
 end
