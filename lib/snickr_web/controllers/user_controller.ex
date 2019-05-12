@@ -34,4 +34,13 @@ defmodule SnickrWeb.UserController do
 
     json(conn, results)
   end
+
+  def inviteSearch(conn, %{"term" => term}) do
+    # TODO remove the current user from the result
+    results =
+      Accounts.list_users(term)
+      |> Phoenix.View.render_many(SnickrWeb.UserView, "search_result.json")
+
+    json(conn, results)
+  end
 end
