@@ -1,6 +1,12 @@
 <h1><%= @workspace.name %></h1>
 <p><%= @workspace.description %></p>
 
+<h2>Invite Someone to <%= @workspace.name %></h2>
+<div>
+  <input id="invite-user" placeholder="Invite a user">
+</div>
+<ul id="invite-search"></ul>
+
 <h2>Channels</h2>
 <ul>
   <%= for c <- Enum.sort(@workspace.channels, &sort_channels/2) do %>
@@ -32,6 +38,40 @@
 
   var dmInput = document.querySelector('#direct-message')
   var searchResultsElement = document.querySelector('#search-results')
+  var inviteUser = document.querySelector('#invite-user')
+  var inviteSearch = document.querySelector('#invite-search')
+
+  inviteUser.addEventListener('keyup', function(event) {
+    // Clear the list of results
+    inviteSearch.innerHTML = ''
+    
+    if (event.currentTarget.value.length > 2) {
+      inviteSearch.innerHTML = 'LOADING...'
+      var req2 = new XMLHttpRequest()
+      req2.open("POST", "/users/search", true)
+      req2.setRequestHeader('Content-Type', 'application/json')
+      req2.setRequestHeader('X-CSRF-Token', CSRF_TOKEN)
+      req2.send(JSON.stringify({
+        term: event.currentTarget.value,
+        workspace_id: workspace_id
+      }))
+
+      req2.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {
+            inviteSearch.innerHTML = ''
+            JSON.parse(this.responseText).forEach(function(result) {
+              renderInviteSearchResult(inviteSearch, result)
+            })
+          } else {
+            inviteSearch.innerHTML = 'FAILED'
+          }
+        }
+      }
+    }
+  })
+
+
   dmInput.addEventListener('keyup', function(event) {
     // Clear the list of results
     searchResultsElement.innerHTML = ''
@@ -68,6 +108,21 @@
     let div = document.createElement('div')
     div.appendChild(document.createTextNode(str))
     return div.innerHTML
+  }
+
+  function renderInviteSearchResult(container, result) {
+    let template = document.createElement('div')
+    template.innerHTML = `
+      ${esc(result.username)}: ${esc(result.full_name)}
+      <%= form_for @dm_changeset, Routes.channel_path(@conn, :create, workspace_id: @workspace.id), [as: :channel], fn f -> %>
+        <%= hidden_input f, :type, value: "direct" %>
+        <%= hidden_input f, :to_user_id %>
+        <%= hidden_input f, :workspace_id, value: @workspace.id %>
+        <%= submit "Send Invite" %>
+      <% end %>
+    `
+    template.querySelector('#channel_to_user_id').setAttribute('value', result.id)
+    container.appendChild(template)
   }
 
   function renderSearchResult(container, result) {
