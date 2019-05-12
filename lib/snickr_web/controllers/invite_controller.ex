@@ -15,12 +15,10 @@ defmodule SnickrWeb.InviteController do
     def create(conn, %{"invite" => attrs}) do
         attrs = Map.put(attrs, "invited_by_user_id", conn.assigns.current_user.id)
         case Accounts.create_membership_invitation(attrs) do
-          {:ok, %{:channel => channel}} ->
+          {:ok, %{:invite => invite}} ->
             conn
-            |> put_flash(:info, "You have successfully created the #{channel.name} channel")
-            |> redirect(to: Routes.channel_path(conn, :show, channel.id))
-          {:error, %Ecto.Changeset{} = changeset} ->
-            render(conn, "new.html", changeset: changeset)
+            |> put_flash(:info, "You have successfully invited the user")
+            |> redirect(to: Routes.workspace_path(conn, :show, invite.workspace_id))
         end
-      end
+    end
 end

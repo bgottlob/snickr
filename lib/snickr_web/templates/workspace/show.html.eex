@@ -115,9 +115,9 @@
     let template = document.createElement('div')
     template.innerHTML = `
       ${esc(result.username)}: ${esc(result.full_name)}
-      <%= form_for @dm_changeset, Routes.invite_path(@conn, :create, workspace_id: @workspace.id), [as: :channel], fn f -> %>
-        <%= hidden_input f, :type, value: "direct" %>
-        <%= hidden_input f, :to_user_id %>
+      <%= form_for @dm_changeset, Routes.invite_path(@conn, :create), fn f -> %>
+        <%= hidden_input f, :status, value: "pending" %>
+        <%= hidden_input f, :user_id, value:  %>
         <%= hidden_input f, :workspace_id, value: @workspace.id %>
         <%= submit "Send Invite" %>
       <% end %>
