@@ -18,7 +18,11 @@ defmodule Snickr.Accounts.MembershipInvitation do
   @doc false
   def changeset(membership_invitation, attrs) do
     membership_invitation
-    |> cast(attrs, [:status])
-    |> validate_required([:status])
+    |> cast(attrs, [:status, :user_id, :workspace_id, :invited_by_user_id])
+    |> validate_required([:status, :user_id, :workspace_id, :invited_by_user_id])
+    |> validate_inclusion(:status, ["pending", "accepted"])
+    |> assoc_constraint(:user)
+    |> assoc_constraint(:workspace)
+    |> assoc_constraint(:invited_by_user)
   end
 end

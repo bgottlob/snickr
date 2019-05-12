@@ -115,7 +115,7 @@
     let template = document.createElement('div')
     template.innerHTML = `
       ${esc(result.username)}: ${esc(result.full_name)}
-      <%= form_for @dm_changeset, Routes.channel_path(@conn, :create, workspace_id: @workspace.id), [as: :channel], fn f -> %>
+      <%= form_for @dm_changeset, Routes.invite_path(@conn, :create, workspace_id: @workspace.id), [as: :channel], fn f -> %>
         <%= hidden_input f, :type, value: "direct" %>
         <%= hidden_input f, :to_user_id %>
         <%= hidden_input f, :workspace_id, value: @workspace.id %>
