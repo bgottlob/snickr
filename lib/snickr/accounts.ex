@@ -6,7 +6,7 @@ defmodule Snickr.Accounts do
   import Ecto.Query, warn: false
   alias Snickr.Repo
 
-  alias Snickr.Accounts.{Admin, Membership, Subscription, User}
+  alias Snickr.Accounts.{Admin, Membership, Subscription, User, MembershipInvitation}
   alias Snickr.Platform.{Channel, Message, Workspace}
 
   @doc """
@@ -18,6 +18,12 @@ defmodule Snickr.Accounts do
       [%User{}, ...]
 
   """
+  def workspace_pending_invites(%User{} = user) do
+    Repo.all(from m in MembershipInvitation,
+  join: u in assoc(m, :user),
+  where: u.id == ^user.id and m.status == "pending")
+  end
+
   def list_users do
     Repo.all(User)
   end
