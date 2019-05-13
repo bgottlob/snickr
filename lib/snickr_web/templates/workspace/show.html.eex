@@ -1,11 +1,13 @@
 <h1><%= @workspace.name %></h1>
 <p><%= @workspace.description %></p>
 
-<h2>Invite Someone to <%= @workspace.name %></h2>
-<div>
-  <input id="invite-user" placeholder="Invite a user">
-</div>
-<ul id="invite-search"></ul>
+<%= if Snickr.Accounts.admin?(@current_user, @workspace) do %>
+  <h2>Invite Someone to <%= @workspace.name %></h2>
+  <div>
+    <input id="invite-user" placeholder="Invite a user">
+  </div>
+  <ul id="invite-search"></ul>
+<% end %>
 
 <h2>Your Channels</h2>
 <ul>
