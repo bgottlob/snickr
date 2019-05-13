@@ -7,6 +7,12 @@
     <input id="invite-user" placeholder="Invite a user">
   </div>
   <ul id="invite-search"></ul>
+
+  <h2>Make Someone Admin to <%= @workspace.name %></h2>
+  <div>
+    <input id="invite-admin" placeholder="Invite a user">
+  </div>
+  <ul id="inviteAdmin-search"></ul>
 <% end %>
 
 <h2>Your Channels</h2>
@@ -59,6 +65,40 @@
   var searchResultsElement = document.querySelector('#search-results')
   var inviteUser = document.querySelector('#invite-user')
   var inviteSearch = document.querySelector('#invite-search')
+
+  var inviteAdmin = document.querySelector('#invite-admin')
+  var inviteAdminSearch = document.querySelector('#inviteAdmin-search')
+
+  inviteAdmin.addEventListener('keyup', function(event) {
+    // Clear the list of results
+    inviteAdminSearch.innerHTML = ''
+    
+    if (event.currentTarget.value.length > 2) {
+      inviteAdminSearch.innerHTML = 'LOADING...'
+      var req2 = new XMLHttpRequest()
+      req2.open("POST", "/users/invite", true)
+      req2.setRequestHeader('Content-Type', 'application/json')
+      req2.setRequestHeader('X-CSRF-Token', CSRF_TOKEN)
+      req2.send(JSON.stringify({
+        term: event.currentTarget.value,
+        workspace_id: workspace_id
+      }))
+
+      req2.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {
+            inviteAdminSearch.innerHTML = ''
+            JSON.parse(this.responseText).forEach(function(result) {
+              renderInviteAdminSearchResult(inviteAdminSearch, result)
+            })
+          } else {
+            inviteAdminSearch.innerHTML = 'FAILED'
+          }
+        }
+      }
+    }
+  })
+
 
   inviteUser.addEventListener('keyup', function(event) {
     // Clear the list of results
@@ -128,6 +168,23 @@
     let div = document.createElement('div')
     div.appendChild(document.createTextNode(str))
     return div.innerHTML
+  }
+
+  function renderInviteAdminSearchResult(container, result) {
+    let template = document.createElement('div')
+    // The changeset I'm creating and passing in isn't used, it's just needed by the form_for method to run properly - if we implemented more robust error handling, we could use a changeset there. [as: :invite] collects all of the attributes of the form into an "invites" map, which the create action in your controller looks for
+    template.innerHTML = `
+      ${esc(result.username)}: ${esc(result.full_name)}
+      <%= form_for Snickr.Accounts.AdminInvitation.changeset(%Snickr.Accounts.AdminInvitation{}, %{}), Routes.invite_path(@conn, :create_admin), [as: :invite], fn f -> %>
+        <%= hidden_input f, :status, value: "pending" %>
+        <%= hidden_input f, :user_id %>
+        <%= hidden_input f, :workspace_id, value: @workspace.id %>
+        <%= submit "Send Invite" %>
+      <% end %>
+    `
+    // The name of the form is invite, which is automatically used as a prefix for the id of each input in the form
+    template.querySelector('#invite_user_id').setAttribute('value', result.id)
+    container.appendChild(template)
   }
 
   function renderInviteSearchResult(container, result) {

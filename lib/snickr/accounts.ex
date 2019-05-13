@@ -6,7 +6,7 @@ defmodule Snickr.Accounts do
   import Ecto.Query, warn: false
   alias Snickr.Repo
 
-  alias Snickr.Accounts.{Admin, Membership, Subscription, User, MembershipInvitation}
+  alias Snickr.Accounts.{Admin, Membership, AdminInvitation, Subscription, User, MembershipInvitation}
   alias Snickr.Platform.{Channel, Message, Workspace}
 
   @doc """
@@ -21,8 +21,14 @@ defmodule Snickr.Accounts do
   def workspace_pending_invites(%User{} = user) do
     Repo.all(from m in MembershipInvitation,
       join: u in assoc(m, :user),
-      join: w in Snickr.Platform.Workspace,
-      where: u.id == ^user.id and m.status == "pending" and w.id == m.workspace_id
+      where: u.id == ^user.id and m.status == "pending" 
+    )
+  end
+
+  def workspace_pending_admin_invites(%User{} = user) do
+    Repo.all(from a in AdminInvitation,
+      join: u in assoc(a, :user),
+      where: u.id == ^user.id and a.status == "pending" 
     )
   end
 
@@ -453,6 +459,19 @@ defmodule Snickr.Accounts do
         update_membership_invitation(membership_invitation, %{status: "accepted"})
 
       %{membership_invitation: mi, membership: membership}
+    end)
+  end
+
+  def accept_admin_invitation(%AdminInvitation{} = admin_invitation) do
+    Repo.transaction(fn ->
+      admin =
+        Repo.insert(%Admin{user_id: admin_invitation.user_id,
+          workspace_id: admin_invitation.workspace_id})
+
+      {:ok, ai} =
+        update_admin_invitation(admin_invitation, %{status: "accepted"})
+
+      %{admin_invitation: ai, admin: admin}
     end)
   end
 
