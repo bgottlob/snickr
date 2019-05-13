@@ -9,7 +9,7 @@ defmodule SnickrWeb.InviteController do
     end
 
     def show(conn, %{"id" => id}) do
-        render(conn, "show.html", membershipinvitation: Accounts.get_membership_invitation(id))
+        render(conn, "show.html", membershipinvitation: Accounts.get_membership_invitation!(id))
     end
 
     # Modify the pattern match to make sure we have a workspace_id to return to in the error path

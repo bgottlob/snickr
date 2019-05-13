@@ -1,5 +1,1 @@
-<ul>
-<%= for m <- @membershipinvitations do %>
-  <li><%= link m.status, to: Routes.invite_path(@conn, :show) %></li>
-<% end %>
-</ul>
+You are in Show

@@ -2,6 +2,7 @@
 
 <ul>
 <%= for m <- @membershipinvitations do %>
-  <li><%= link m.status, to: Routes.invite_path(@conn, :show) %></li>
+  <li> Pending Invitation from <%= m.name%>
+  <%= button "Accept", to: Routes.invite_path(@conn, :show, m.id) %></li>
 <% end %>
 </ul>
