@@ -1,11 +1,18 @@
 defmodule SnickrWeb.InviteController do
     use SnickrWeb, :controller
     
+    alias Snickr.Repo
     alias Snickr.Accounts
     alias Snickr.Accounts.MembershipInvitation
+
+    plug :authenticate_user when action in [:index, :show, :create, :accept]
     
     def index(conn, _attrs) do
-        render(conn, "index.html", membershipinvitations: Accounts.workspace_pending_invites(conn.assigns.current_user))
+        membershipinvitations =
+            Accounts.workspace_pending_invites(conn.assigns.current_user)
+            |> Repo.preload(:workspace)
+            |> Repo.preload(:invited_by_user)
+        render(conn, "index.html", membershipinvitations: membershipinvitations)
     end
 
     def show(conn, %{"id" => id}) do
@@ -26,6 +33,20 @@ defmodule SnickrWeb.InviteController do
             conn
             |> put_flash(:error, "Inviting the user failed, please try again")
             |> redirect(to: Routes.workspace_path(conn, :show, workspace_id))
+        end
+    end
+
+    def accept(conn, %{"id" => id}) do
+        case Accounts.accept_membership_invitation(Repo.get(MembershipInvitation, id)) do
+            {:ok, %{:membership_invitation => mi}} ->
+                mi = Repo.preload(mi, :workspace)
+                conn
+                |> put_flash(:info, "Welcome to #{mi.workspace.name}!")
+                |> redirect(to: Routes.workspace_path(conn, :show, mi.workspace.id))
+            {:error, _reason} ->
+                conn
+                |> put_flash(:error, "An error occurred")
+                |> redirect(to: Routes.invite_path(conn, :index))
         end
     end
 end
