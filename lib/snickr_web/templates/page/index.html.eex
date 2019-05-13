@@ -6,6 +6,7 @@
       <ul>
         <li><%= link "Create a Workspace", to: Routes.workspace_path(@conn, :new) %></li>
         <li><%= link "Your Workspaces", to: Routes.workspace_path(@conn, :index) %></li>
+        <li><%= link "Your Invites", to: Routes.invite_path(@conn, :index) %></li>
       </ul>
     <% end %>
   </article>

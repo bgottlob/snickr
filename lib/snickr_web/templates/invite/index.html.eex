@@ -1,0 +1,9 @@
+<h1>Your Invitations</h1>
+
+<ul>
+<%= for mi <- @membershipinvitations do %>
+  <li> Pending Invitation from <%= "#{mi.invited_by_user.first_name} #{mi.invited_by_user.last_name}" %> for <%= mi.workspace.name %>
+    <%= button "Accept", to: Routes.invite_path(@conn, :accept, mi.id), method: :post %>
+  </li>
+  <% end %>
+</ul>

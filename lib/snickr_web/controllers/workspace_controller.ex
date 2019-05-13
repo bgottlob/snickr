@@ -4,6 +4,9 @@ defmodule SnickrWeb.WorkspaceController do
   alias Snickr.Platform
   alias Snickr.Platform.{Channel, Workspace}
 
+  alias Snickr.Accounts
+  # alias Snickr.Accounts.create_membership_invitation
+  
   plug :authenticate_user when action in [:new, :index, :show]
 
   def new(conn, _attrs) do

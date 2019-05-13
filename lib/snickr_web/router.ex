@@ -20,9 +20,13 @@ defmodule SnickrWeb.Router do
     get "/", PageController, :index
     resources "/users", UserController, only: [:new, :create, :show]
     post "/users/search", UserController, :search
+    post "/users/invite", UserController, :inviteSearch
+    post "/invites/:id", InviteController, :show
     resources "/sessions", SessionController, only: [:new, :create, :delete]
     resources "/workspaces", WorkspaceController, only: [:index, :new, :create, :show]
     resources "/channels", ChannelController, only: [:new, :create, :show]
+    resources "/invites", InviteController, only: [:index, :show, :create]
+    post "/invites/:id/accept", InviteController, :accept
   end
 
   # Other scopes may use custom stacks.
