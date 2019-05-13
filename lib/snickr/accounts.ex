@@ -20,11 +20,10 @@ defmodule Snickr.Accounts do
   """
   def workspace_pending_invites(%User{} = user) do
     Repo.all(from m in MembershipInvitation,
-  join: u in assoc(m, :user),
-  join: w in Snickr.Platform.Workspace,
-  where: u.id == ^user.id and m.status == "pending" and w.id == m.workspace_id,
-  select: %{w | "name": w.name}
-  )
+      join: u in assoc(m, :user),
+      join: w in Snickr.Platform.Workspace,
+      where: u.id == ^user.id and m.status == "pending" and w.id == m.workspace_id
+    )
   end
 
   def list_users do
@@ -442,6 +441,19 @@ defmodule Snickr.Accounts do
     membership_invitation
     |> MembershipInvitation.changeset(attrs)
     |> Repo.update()
+  end
+
+  def accept_membership_invitation(%MembershipInvitation{} = membership_invitation) do
+    Repo.transaction(fn ->
+      membership =
+        Repo.insert(%Membership{user_id: membership_invitation.user_id,
+          workspace_id: membership_invitation.workspace_id})
+
+      {:ok, mi} =
+        update_membership_invitation(membership_invitation, %{status: "accepted"})
+
+      %{membership_invitation: mi, membership: membership}
+    end)
   end
 
   @doc """
