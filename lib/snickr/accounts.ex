@@ -601,4 +601,10 @@ defmodule Snickr.Accounts do
       Repo.all(query)
     end
   end
+  
+  def list_subscribed_to_channels(%User{} = user) do
+    user
+    |> Repo.preload(:subscribed_to_channels)
+    |> Map.get(:subscribed_to_channels)
+  end
 end

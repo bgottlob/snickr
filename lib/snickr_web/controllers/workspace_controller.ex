@@ -1,6 +1,7 @@
 defmodule SnickrWeb.WorkspaceController do
   use SnickrWeb, :controller
 
+  alias Snickr.Accounts
   alias Snickr.Platform
   alias Snickr.Platform.{Channel, Workspace}
 
@@ -37,8 +38,10 @@ defmodule SnickrWeb.WorkspaceController do
         |> redirect(to: Routes.workspace_path(conn, :index))
 
       workspace ->
-        render(conn, "show.html", workspace: Platform.preload_channels(workspace),
-          dm_changeset: Channel.changeset(%Channel{}, %{from_user_id: conn.assigns.current_user.id, workspace_id: workspace.id}))
+        render(conn, "show.html", workspace: workspace,
+          channels: Accounts.list_subscribed_to_channels(conn.assigns.current_user),
+          public_channels: Platform.list_public_channels(workspace)
+        )
     end
   end
 end

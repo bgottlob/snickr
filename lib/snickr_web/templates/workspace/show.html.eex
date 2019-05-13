@@ -7,9 +7,9 @@
 </div>
 <ul id="invite-search"></ul>
 
-<h2>Channels</h2>
+<h2>Your Channels</h2>
 <ul>
-  <%= for c <- Enum.sort(@workspace.channels, &sort_channels/2) do %>
+  <%= for c <- Enum.sort(@channels, &sort_channels/2) do %>
     <li>
       <%= if c.type == "direct" do %>
         <%= link direct_recipient(c, @current_user), to: Routes.channel_path(@conn, :show, c.id) %>
@@ -31,6 +31,23 @@
   <input id="direct-message" placeholder="Find a user">
 </div>
 <ul id="search-results"></ul>
+
+<h2>Public Channels</h2>
+<ul>
+<%= for c <- @public_channels do %>
+  <li>
+    <%= c.name %>
+    <%= if Snickr.Accounts.subscriber?(@current_user, c) do %>
+      <button disabled="true">Subscribed</button>
+    <% else %>
+      <%= form_for Snickr.Accounts.Subscription.changeset(%Snickr.Accounts.Subscription{}, %{}), Routes.subscription_path(@conn, :create), [as: :subscription, style: "display:inline"], fn f -> %>
+        <%= hidden_input f, :channel_id, value: c.id %>
+        <%= submit "Subscribe" %>
+      <% end %>
+    <% end %>
+  </li>
+<% end %>
+</ul>
 
 <script>
   const CSRF_TOKEN = <%= raw Poison.encode!(Plug.CSRFProtection.get_csrf_token()) %>
@@ -132,7 +149,7 @@
     let template = document.createElement('div')
     template.innerHTML = `
       ${esc(result.username)}: ${esc(result.full_name)}
-      <%= form_for @dm_changeset, Routes.channel_path(@conn, :create, workspace_id: @workspace.id), [as: :channel], fn f -> %>
+      <%= form_for Snickr.Platform.Channel.changeset(%Snickr.Platform.Channel{}, %{}), Routes.channel_path(@conn, :create, workspace_id: @workspace.id), [as: :channel], fn f -> %>
         <%= hidden_input f, :type, value: "direct" %>
         <%= hidden_input f, :to_user_id %>
         <%= hidden_input f, :workspace_id, value: @workspace.id %>
