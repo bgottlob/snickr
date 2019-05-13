@@ -27,6 +27,8 @@ defmodule SnickrWeb.Router do
     resources "/channels", ChannelController, only: [:new, :create, :show]
     resources "/invites", InviteController, only: [:index, :show, :create]
     post "/invites/:id/accept", InviteController, :accept
+    post "/subscriptions", SubscriptionController, :create
+    delete "/subscriptions/:user_id/:channel_id", SubscriptionController, :delete
   end
 
   # Other scopes may use custom stacks.

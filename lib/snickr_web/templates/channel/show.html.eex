@@ -12,3 +12,5 @@
 
 <div id="messages"></div>
 <input id="chat-input" placeholder="Enter message" type="text">
+
+<%= link "Unsubscribe", to: Routes.subscription_path(@conn, :delete, @current_user.id, @channel.id), method: :delete %>

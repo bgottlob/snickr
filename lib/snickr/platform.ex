@@ -388,4 +388,10 @@ defmodule Snickr.Platform do
   def change_message(%Message{} = message) do
     Message.changeset(message, %{})
   end
+
+  def list_public_channels(%Workspace{} = workspace) do
+    Repo.all(from c in Channel,
+      join: w in assoc(c, :workspace),
+      where: w.id == ^workspace.id and c.type == "public")
+  end
 end
