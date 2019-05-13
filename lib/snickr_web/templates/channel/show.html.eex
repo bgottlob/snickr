@@ -3,6 +3,8 @@
 <%= content_tag :div, id: "user-data", data: [id: @conn.assigns.current_user.id] do %>
 <% end %>
 
+<%= link "< Back", to: Routes.workspace_path(@conn, :show, @channel.workspace_id) %>
+
 <%= if @channel.type == "direct" do %>
 <h1><%= direct_recipient(@channel, @current_user) %></h1>
 <% else %>
