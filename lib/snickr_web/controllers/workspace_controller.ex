@@ -8,7 +8,7 @@ defmodule SnickrWeb.WorkspaceController do
   alias Snickr.Accounts
   # alias Snickr.Accounts.create_membership_invitation
   
-  plug :authenticate_user when action in [:new, :index, :show]
+  plug :authenticate_user
 
   def new(conn, _attrs) do
     render(conn, "new.html", changeset: Workspace.changeset(%Workspace{}, %{}))

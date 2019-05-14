@@ -15,9 +15,8 @@
 <div id="messages"></div>
 <input id="chat-input" placeholder="Enter message" type="text">
 
-<%= link "Unsubscribe", to: Routes.subscription_path(@conn, :delete, @current_user.id, @channel.id), method: :delete %>
-
 <%= if @channel.type != "direct" do %>
+  <%= link "Unsubscribe", to: Routes.subscription_path(@conn, :delete, @current_user.id, @channel.id), method: :delete %>
   <h2>Invite Someone to <%= @channel.name %></h2>
   <div>
     <input id="invite-user" placeholder="Invite a user">

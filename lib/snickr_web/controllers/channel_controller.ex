@@ -5,7 +5,7 @@ defmodule SnickrWeb.ChannelController do
   alias Snickr.Platform
   alias Snickr.Platform.{Channel, Message}
 
-  plug :authenticate_user when action in [:new, :index, :show]
+  plug :authenticate_user
 
   def new(conn, %{"workspace_id" => workspace_id}) do
     # TODO make sure users can only access this page if they are members of the
