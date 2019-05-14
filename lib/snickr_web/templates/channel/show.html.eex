@@ -16,3 +16,68 @@
 <input id="chat-input" placeholder="Enter message" type="text">
 
 <%= link "Unsubscribe", to: Routes.subscription_path(@conn, :delete, @current_user.id, @channel.id), method: :delete %>
+
+  <h2>Invite Someone to <%= @channel.name %></h2>
+  <div>
+    <input id="invite-user" placeholder="Invite a user">
+  </div>
+  <ul id="invite-search"></ul>
+
+ <script>
+  const CSRF_TOKEN = <%= raw Poison.encode!(Plug.CSRFProtection.get_csrf_token()) %>
+  const channelId = Number(<%= @channel.id %>)
+  var inviteUser = document.querySelector('#invite-user')
+  var inviteSearch = document.querySelector('#invite-search')
+
+  inviteUser.addEventListener('keyup', function(event) {
+    // Clear the list of results
+    inviteSearch.innerHTML = ''
+    
+    if (event.currentTarget.value.length > 2) {
+      inviteSearch.innerHTML = 'LOADING...'
+      var req2 = new XMLHttpRequest()
+      req2.open("POST", "/users/search", true)
+      req2.setRequestHeader('Content-Type', 'application/json')
+      req2.setRequestHeader('X-CSRF-Token', CSRF_TOKEN)
+      req2.send(JSON.stringify({
+        term: event.currentTarget.value,
+        workspace_id: Number(<%= @channel.workspace_id %>)
+      }))
+
+      req2.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {
+            inviteSearch.innerHTML = ''
+            JSON.parse(this.responseText).forEach(function(result) {
+              renderInviteSearchResult(inviteSearch, result)
+            })
+          } else {
+            inviteSearch.innerHTML = 'FAILED'
+          }
+        }
+      }
+    }
+  })
+
+  // Escapes untrusted strings
+  function esc(str) {
+    let div = document.createElement('div')
+    div.appendChild(document.createTextNode(str))
+    return div.innerHTML
+  }
+
+  function renderInviteSearchResult(container, result) {
+    let template = document.createElement('div')
+    template.innerHTML = `
+      ${esc(result.username)}: ${esc(result.full_name)}
+      <%= form_for Snickr.Accounts.SubscriptionInvitation.changeset(%Snickr.Accounts.SubscriptionInvitation{}, %{}), Routes.invite_path(@conn, :create_subscription), [as: :invite], fn f -> %>
+        <%= hidden_input f, :status, value: "pending" %>
+        <%= hidden_input f, :user_id %>
+        <%= hidden_input f, :channel_id, value: @channel.id %>
+        <%= submit "Send Invite" %>
+      <% end %>
+    `
+    template.querySelector('#invite_user_id').setAttribute('value', result.id)
+    container.appendChild(template)
+  }
+ </script>
