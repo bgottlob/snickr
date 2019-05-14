@@ -464,9 +464,17 @@ defmodule Snickr.Accounts do
 
   def accept_admin_invitation(%AdminInvitation{} = admin_invitation) do
     Repo.transaction(fn ->
+      # Don't raise an error if the user is alread a member of the workspace
+      membership =
+        Repo.insert!(
+          %Membership{user_id: admin_invitation.user_id, workspace_id: admin_invitation.workspace_id},
+          on_conflict: :nothing
+        )
+
       admin =
-        Repo.insert(%Admin{user_id: admin_invitation.user_id,
+        Repo.insert!(%Admin{user_id: admin_invitation.user_id,
           workspace_id: admin_invitation.workspace_id})
+        
 
       {:ok, ai} =
         update_admin_invitation(admin_invitation, %{status: "accepted"})
