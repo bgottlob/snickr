@@ -17,6 +17,7 @@
 
 <%= link "Unsubscribe", to: Routes.subscription_path(@conn, :delete, @current_user.id, @channel.id), method: :delete %>
 
+<%= if @channel.type != "direct" do %>
   <h2>Invite Someone to <%= @channel.name %></h2>
   <div>
     <input id="invite-user" placeholder="Invite a user">
@@ -81,3 +82,4 @@
     container.appendChild(template)
   }
  </script>
+ <% end %>
