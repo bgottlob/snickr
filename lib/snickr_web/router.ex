@@ -27,8 +27,10 @@ defmodule SnickrWeb.Router do
     resources "/channels", ChannelController, only: [:new, :create, :show]
     resources "/invites", InviteController, only: [:index, :show, :create]
     post "/admin_invites", InviteController, :create_admin
+    post "/subscription_invites", InviteController, :create_subscription
     post "/invites/:id/accept", InviteController, :accept
     post "/invites/:id/accept_admin", InviteController, :accept_admin
+    post "/invites/:id/accept_subscription", InviteController, :accept_subscription
     post "/subscriptions", SubscriptionController, :create
     delete "/subscriptions/:user_id/:channel_id", SubscriptionController, :delete
   end

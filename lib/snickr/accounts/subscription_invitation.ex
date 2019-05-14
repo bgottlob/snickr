@@ -18,7 +18,11 @@ defmodule Snickr.Accounts.SubscriptionInvitation do
   @doc false
   def changeset(subscription_invitation, attrs) do
     subscription_invitation
-    |> cast(attrs, [:status])
-    |> validate_required([:status])
+    |> cast(attrs, [:status, :user_id, :channel_id, :invited_by_user_id])
+    |> validate_required([:status, :user_id, :channel_id, :invited_by_user_id])
+    |> validate_inclusion(:status, ["pending", "accepted"])
+    |> assoc_constraint(:user)
+    |> assoc_constraint(:channel)
+    |> assoc_constraint(:invited_by_user)
   end
 end

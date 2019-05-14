@@ -6,7 +6,7 @@ defmodule Snickr.Accounts do
   import Ecto.Query, warn: false
   alias Snickr.Repo
 
-  alias Snickr.Accounts.{Admin, Membership, AdminInvitation, Subscription, User, MembershipInvitation}
+  alias Snickr.Accounts.{Admin, Membership, AdminInvitation, Subscription, SubscriptionInvitation, User, MembershipInvitation}
   alias Snickr.Platform.{Channel, Message, Workspace}
 
   @doc """
@@ -29,6 +29,13 @@ defmodule Snickr.Accounts do
     Repo.all(from a in AdminInvitation,
       join: u in assoc(a, :user),
       where: u.id == ^user.id and a.status == "pending" 
+    )
+  end
+
+  def pending_subscription_invites(%User{} = user) do
+    Repo.all(from si in SubscriptionInvitation,
+      join: u in assoc(si, :user),
+      where: u.id == ^user.id and si.status == "pending" 
     )
   end
 
@@ -480,6 +487,22 @@ defmodule Snickr.Accounts do
         update_admin_invitation(admin_invitation, %{status: "accepted"})
 
       %{admin_invitation: ai, admin: admin}
+    end)
+  end
+
+  def accept_subscription_invitation(%SubscriptionInvitation{} = subscription_invitation) do
+    Repo.transaction(fn ->
+      # Don't raise an error if the user is already a subscriber
+      subscription =
+        Repo.insert!(
+          %Subscription{user_id: subscription_invitation.user_id, channel_id: subscription_invitation.channel_id},
+          on_conflict: :nothing
+        )
+
+      {:ok, si} =
+        update_subscription_invitation(subscription_invitation, %{status: "accepted"})
+
+      %{subscription_invitation: si, subscription: subscription}
     end)
   end
 

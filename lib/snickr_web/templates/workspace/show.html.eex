@@ -172,7 +172,6 @@
 
   function renderInviteAdminSearchResult(container, result) {
     let template = document.createElement('div')
-    // The changeset I'm creating and passing in isn't used, it's just needed by the form_for method to run properly - if we implemented more robust error handling, we could use a changeset there. [as: :invite] collects all of the attributes of the form into an "invites" map, which the create action in your controller looks for
     template.innerHTML = `
       ${esc(result.username)}: ${esc(result.full_name)}
       <%= form_for Snickr.Accounts.AdminInvitation.changeset(%Snickr.Accounts.AdminInvitation{}, %{}), Routes.invite_path(@conn, :create_admin), [as: :invite], fn f -> %>
@@ -182,7 +181,6 @@
         <%= submit "Send Invite" %>
       <% end %>
     `
-    // The name of the form is invite, which is automatically used as a prefix for the id of each input in the form
     template.querySelector('#invite_user_id').setAttribute('value', result.id)
     container.appendChild(template)
   }
