@@ -1,5 +1,3 @@
-
-
 <section class="row">
   <article class="column">
     <%= if @current_user do %>
@@ -8,7 +6,14 @@
         <li><%= link "Your Workspaces", to: Routes.workspace_path(@conn, :index) %></li>
         <li><%= link "Your Invites", to: Routes.invite_path(@conn, :index) %></li>
       </ul>
+    <% else %>
+      <h3>Welcome to Snickr!</h3>
+      <p>
+      <%= link "Log in", to: Routes.session_path(@conn, :new) %>
+      or
+      <%= link "Register", to: Routes.user_path(@conn, :new) %>
+      to get started
+      </p>
     <% end %>
   </article>
-
 </section>
