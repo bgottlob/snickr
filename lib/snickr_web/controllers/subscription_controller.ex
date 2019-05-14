@@ -6,7 +6,7 @@ defmodule SnickrWeb.SubscriptionController do
   alias Snickr.Accounts.Subscription
   alias Snickr.Platform.{Channel, Workspace}
 
-  plug :authenticate_user when action in [:create, :delete]
+  plug :authenticate_user
 
   defp error_on_create(conn) do
     conn

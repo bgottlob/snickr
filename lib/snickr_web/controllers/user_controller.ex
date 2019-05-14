@@ -4,7 +4,7 @@ defmodule SnickrWeb.UserController do
   alias Snickr.Accounts
   alias Snickr.Accounts.User
 
-  plug :authenticate_user when action in [:show, :search]
+  plug :authenticate_user when action in [:show, :search, :inviteSearch]
 
   def new(conn, _attrs) do
     render(conn, "new.html", changeset: Accounts.change_user(%User{}, %{}))
