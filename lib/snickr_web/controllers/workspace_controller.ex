@@ -37,7 +37,11 @@ defmodule SnickrWeb.WorkspaceController do
       workspace ->
         render(conn, "show.html",
           workspace: workspace,
-          channels: Accounts.list_subscribed_to_channels(conn.assigns.current_user),
+          channels:
+            Accounts.list_subscribed_to_channels_in_workspace(
+              conn.assigns.current_user,
+              workspace
+            ),
           public_channels: Platform.list_public_channels(workspace)
         )
     end

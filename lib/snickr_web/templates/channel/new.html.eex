@@ -16,6 +16,7 @@
   </div>
   <div>
     <%= select f, :type, ["Public": "public", "Private": "private"] %>
+    <%= error_tag f, :username %>
   </div>
   <%= hidden_input f, :workspace_id, value: @workspace_id %>
   <%= submit "Create" %>

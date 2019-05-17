@@ -65,22 +65,27 @@ defmodule Snickr.Platform do
   def create_workspace(%User{} = created_by_user, attrs \\ %{}) do
     # Transaction to create the workspace, add the user who created the
     # workspace as a member and an admin
-    Repo.transaction(fn ->
-      workspace =
-        %Workspace{}
-        |> Workspace.create_changeset(created_by_user, attrs)
+    try do
+      Repo.transaction(fn ->
+        workspace =
+          %Workspace{}
+          |> Workspace.create_changeset(created_by_user, attrs)
+          |> Repo.insert!()
+
+        %Membership{}
+        |> Membership.create_changeset(created_by_user, workspace)
         |> Repo.insert!()
 
-      %Membership{}
-      |> Membership.create_changeset(created_by_user, workspace)
-      |> Repo.insert!()
+        %Admin{}
+        |> Admin.create_changeset(created_by_user, workspace)
+        |> Repo.insert!()
 
-      %Admin{}
-      |> Admin.create_changeset(created_by_user, workspace)
-      |> Repo.insert!()
-
-      workspace
-    end)
+        workspace
+      end)
+    rescue
+      e in Ecto.InvalidChangesetError ->
+        {:error, e.changeset}
+    end
   end
 
   def preload_channels(%Workspace{} = workspace) do
@@ -246,19 +251,24 @@ defmodule Snickr.Platform do
         {:error, :created_by_user_unauthorized}
 
       true ->
-        Repo.transaction(fn ->
-          channel =
-            %Channel{}
-            |> Channel.changeset(attrs)
-            |> Repo.insert!()
+        try do
+          Repo.transaction(fn ->
+            channel =
+              %Channel{}
+              |> Channel.changeset(attrs)
+              |> Repo.insert!()
 
-          subscription =
-            %Subscription{}
-            |> Subscription.changeset(%{user_id: created_by_user.id, channel_id: channel.id})
-            |> Repo.insert!()
+            subscription =
+              %Subscription{}
+              |> Subscription.changeset(%{user_id: created_by_user.id, channel_id: channel.id})
+              |> Repo.insert!()
 
-          %{channel: channel, subscription: subscription}
-        end)
+            %{channel: channel, subscription: subscription}
+          end)
+        rescue
+          e in Ecto.InvalidChangesetError ->
+            {:error, e.changeset}
+        end
     end
   end
 

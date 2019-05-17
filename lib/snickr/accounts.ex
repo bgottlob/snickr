@@ -670,9 +670,12 @@ defmodule Snickr.Accounts do
     end
   end
 
-  def list_subscribed_to_channels(%User{} = user) do
-    user
-    |> Repo.preload(:subscribed_to_channels)
-    |> Map.get(:subscribed_to_channels)
+  def list_subscribed_to_channels_in_workspace(%User{} = user, %Workspace{} = workspace) do
+    Repo.all(
+      from c in Channel,
+        join: w in assoc(c, :workspace),
+        join: u in assoc(c, :subscribers),
+        where: w.id == ^workspace.id and u.id == ^user.id
+    )
   end
 end
