@@ -26,7 +26,8 @@ defmodule SnickrWeb.UserController do
     render(conn, "show.html", user: Accounts.get_user!(id))
   end
 
-  def search(conn, %{"term" => term, "workspace_id" => workspace_id}) when is_integer(workspace_id) do
+  def search(conn, %{"term" => term, "workspace_id" => workspace_id})
+      when is_integer(workspace_id) do
     # TODO remove the current user from the result
     results =
       Accounts.list_users(term, workspace_id)
