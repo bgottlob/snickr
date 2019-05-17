@@ -6,8 +6,17 @@ defmodule Snickr.Accounts do
   import Ecto.Query, warn: false
   alias Snickr.Repo
 
-  alias Snickr.Accounts.{Admin, Membership, AdminInvitation, Subscription, SubscriptionInvitation, User, MembershipInvitation}
-  alias Snickr.Platform.{Channel, Message, Workspace}
+  alias Snickr.Accounts.{
+    Admin,
+    Membership,
+    AdminInvitation,
+    Subscription,
+    SubscriptionInvitation,
+    User,
+    MembershipInvitation
+  }
+
+  alias Snickr.Platform.{Channel, Workspace}
 
   @doc """
   Returns the list of users.
@@ -19,23 +28,26 @@ defmodule Snickr.Accounts do
 
   """
   def workspace_pending_invites(%User{} = user) do
-    Repo.all(from m in MembershipInvitation,
-      join: u in assoc(m, :user),
-      where: u.id == ^user.id and m.status == "pending" 
+    Repo.all(
+      from m in MembershipInvitation,
+        join: u in assoc(m, :user),
+        where: u.id == ^user.id and m.status == "pending"
     )
   end
 
   def workspace_pending_admin_invites(%User{} = user) do
-    Repo.all(from a in AdminInvitation,
-      join: u in assoc(a, :user),
-      where: u.id == ^user.id and a.status == "pending" 
+    Repo.all(
+      from a in AdminInvitation,
+        join: u in assoc(a, :user),
+        where: u.id == ^user.id and a.status == "pending"
     )
   end
 
   def pending_subscription_invites(%User{} = user) do
-    Repo.all(from si in SubscriptionInvitation,
-      join: u in assoc(si, :user),
-      where: u.id == ^user.id and si.status == "pending" 
+    Repo.all(
+      from si in SubscriptionInvitation,
+        join: u in assoc(si, :user),
+        where: u.id == ^user.id and si.status == "pending"
     )
   end
 
@@ -459,11 +471,12 @@ defmodule Snickr.Accounts do
   def accept_membership_invitation(%MembershipInvitation{} = membership_invitation) do
     Repo.transaction(fn ->
       membership =
-        Repo.insert(%Membership{user_id: membership_invitation.user_id,
-          workspace_id: membership_invitation.workspace_id})
+        Repo.insert(%Membership{
+          user_id: membership_invitation.user_id,
+          workspace_id: membership_invitation.workspace_id
+        })
 
-      {:ok, mi} =
-        update_membership_invitation(membership_invitation, %{status: "accepted"})
+      {:ok, mi} = update_membership_invitation(membership_invitation, %{status: "accepted"})
 
       %{membership_invitation: mi, membership: membership}
     end)
@@ -474,19 +487,22 @@ defmodule Snickr.Accounts do
       # Don't raise an error if the user is alread a member of the workspace
       membership =
         Repo.insert!(
-          %Membership{user_id: admin_invitation.user_id, workspace_id: admin_invitation.workspace_id},
+          %Membership{
+            user_id: admin_invitation.user_id,
+            workspace_id: admin_invitation.workspace_id
+          },
           on_conflict: :nothing
         )
 
       admin =
-        Repo.insert!(%Admin{user_id: admin_invitation.user_id,
-          workspace_id: admin_invitation.workspace_id})
-        
+        Repo.insert!(%Admin{
+          user_id: admin_invitation.user_id,
+          workspace_id: admin_invitation.workspace_id
+        })
 
-      {:ok, ai} =
-        update_admin_invitation(admin_invitation, %{status: "accepted"})
+      {:ok, ai} = update_admin_invitation(admin_invitation, %{status: "accepted"})
 
-      %{admin_invitation: ai, admin: admin}
+      %{admin_invitation: ai, admin: admin, membership: membership}
     end)
   end
 
@@ -495,12 +511,14 @@ defmodule Snickr.Accounts do
       # Don't raise an error if the user is already a subscriber
       subscription =
         Repo.insert!(
-          %Subscription{user_id: subscription_invitation.user_id, channel_id: subscription_invitation.channel_id},
+          %Subscription{
+            user_id: subscription_invitation.user_id,
+            channel_id: subscription_invitation.channel_id
+          },
           on_conflict: :nothing
         )
 
-      {:ok, si} =
-        update_subscription_invitation(subscription_invitation, %{status: "accepted"})
+      {:ok, si} = update_subscription_invitation(subscription_invitation, %{status: "accepted"})
 
       %{subscription_invitation: si, subscription: subscription}
     end)
@@ -651,7 +669,7 @@ defmodule Snickr.Accounts do
       Repo.all(query)
     end
   end
-  
+
   def list_subscribed_to_channels(%User{} = user) do
     user
     |> Repo.preload(:subscribed_to_channels)

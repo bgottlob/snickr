@@ -3,11 +3,8 @@ defmodule SnickrWeb.WorkspaceController do
 
   alias Snickr.Accounts
   alias Snickr.Platform
-  alias Snickr.Platform.{Channel, Workspace}
+  alias Snickr.Platform.Workspace
 
-  alias Snickr.Accounts
-  # alias Snickr.Accounts.create_membership_invitation
-  
   plug :authenticate_user
 
   def new(conn, _attrs) do
@@ -38,7 +35,8 @@ defmodule SnickrWeb.WorkspaceController do
         |> redirect(to: Routes.workspace_path(conn, :index))
 
       workspace ->
-        render(conn, "show.html", workspace: workspace,
+        render(conn, "show.html",
+          workspace: workspace,
           channels: Accounts.list_subscribed_to_channels(conn.assigns.current_user),
           public_channels: Platform.list_public_channels(workspace)
         )

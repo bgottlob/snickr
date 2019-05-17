@@ -1,4 +1,3 @@
 defmodule SnickrWeb.InviteView do
-    use SnickrWeb, :view
-  end
-  
+  use SnickrWeb, :view
+end

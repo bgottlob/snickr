@@ -17,7 +17,10 @@ defmodule Snickr.Accounts.User do
 
     has_many :created_workspaces, Workspace, foreign_key: :created_by_user_id
     has_many :created_channels, Channel, foreign_key: :created_by_user_id
-    has_many :sent_subscription_invitations, SubscriptionInvitation, foreign_key: :invited_by_user_id
+
+    has_many :sent_subscription_invitations, SubscriptionInvitation,
+      foreign_key: :invited_by_user_id
+
     has_many :sent_membership_invitations, MembershipInvitation, foreign_key: :invited_by_user_id
     has_many :sent_admin_invitations, AdminInvitation, foreign_key: :invited_by_user_id
 
