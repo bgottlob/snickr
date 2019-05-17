@@ -28,18 +28,16 @@ defmodule SnickrWeb.UserController do
 
   def search(conn, %{"term" => term, "workspace_id" => workspace_id})
       when is_integer(workspace_id) do
-    # TODO remove the current user from the result
     results =
-      Accounts.list_users(term, workspace_id)
+      Accounts.list_users(term, conn.assigns.current_user, workspace_id)
       |> Phoenix.View.render_many(SnickrWeb.UserView, "search_result.json")
 
     json(conn, results)
   end
 
   def inviteSearch(conn, %{"term" => term}) do
-    # TODO remove the current user from the result
     results =
-      Accounts.list_users(term)
+      Accounts.list_users(term, conn.assigns.current_user)
       |> Phoenix.View.render_many(SnickrWeb.UserView, "search_result.json")
 
     json(conn, results)

@@ -649,14 +649,15 @@ defmodule Snickr.Accounts do
     AdminInvitation.changeset(admin_invitation, %{})
   end
 
-  def list_users(term, workspace_id \\ nil) do
+  def list_users(term, %User{} = current_user, workspace_id \\ nil) do
     term = "#{term}%"
 
     query =
       from(u in User,
         where:
-          ilike(u.username, ^term) or
-            ilike(fragment("? || ' ' || ?", u.first_name, u.last_name), ^term)
+          u.id != ^current_user.id and
+            (ilike(u.username, ^term) or
+               ilike(fragment("? || ' ' || ?", u.first_name, u.last_name), ^term))
       )
 
     if workspace_id do

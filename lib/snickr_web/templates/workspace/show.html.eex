@@ -70,66 +70,71 @@
   var inviteAdmin = document.querySelector('#invite-admin')
   var inviteAdminSearch = document.querySelector('#inviteAdmin-search')
 
-  inviteAdmin.addEventListener('keyup', function(event) {
-    // Clear the list of results
-    inviteAdminSearch.innerHTML = ''
-    
-    if (event.currentTarget.value.length > 2) {
-      inviteAdminSearch.innerHTML = 'LOADING...'
-      var req2 = new XMLHttpRequest()
-      req2.open("POST", "/users/invite", true)
-      req2.setRequestHeader('Content-Type', 'application/json')
-      req2.setRequestHeader('X-CSRF-Token', CSRF_TOKEN)
-      req2.send(JSON.stringify({
-        term: event.currentTarget.value,
-        workspace_id: workspace_id
-      }))
+  // Checks if the user is an admin
+  if (inviteAdmin && inviteAdminSearch && inviteUser && inviteSearch) {
 
-      req2.onreadystatechange = function() {
-        if (this.readyState == 4) {
-          if (this.status == 200) {
-            inviteAdminSearch.innerHTML = ''
-            JSON.parse(this.responseText).forEach(function(result) {
-              renderInviteAdminSearchResult(inviteAdminSearch, result)
-            })
-          } else {
-            inviteAdminSearch.innerHTML = 'FAILED'
+    inviteAdmin.addEventListener('keyup', function(event) {
+      // Clear the list of results
+      inviteAdminSearch.innerHTML = ''
+
+      if (event.currentTarget.value.length > 2) {
+        inviteAdminSearch.innerHTML = 'LOADING...'
+        var req2 = new XMLHttpRequest()
+        req2.open("POST", "/users/invite", true)
+        req2.setRequestHeader('Content-Type', 'application/json')
+        req2.setRequestHeader('X-CSRF-Token', CSRF_TOKEN)
+        req2.send(JSON.stringify({
+          term: event.currentTarget.value,
+          workspace_id: workspace_id
+        }))
+
+        req2.onreadystatechange = function() {
+          if (this.readyState == 4) {
+            if (this.status == 200) {
+              inviteAdminSearch.innerHTML = ''
+              JSON.parse(this.responseText).forEach(function(result) {
+                renderInviteAdminSearchResult(inviteAdminSearch, result)
+              })
+            } else {
+              inviteAdminSearch.innerHTML = 'FAILED'
+            }
           }
         }
       }
-    }
-  })
+    })
 
 
-  inviteUser.addEventListener('keyup', function(event) {
-    // Clear the list of results
-    inviteSearch.innerHTML = ''
-    
-    if (event.currentTarget.value.length > 2) {
-      inviteSearch.innerHTML = 'LOADING...'
-      var req2 = new XMLHttpRequest()
-      req2.open("POST", "/users/invite", true)
-      req2.setRequestHeader('Content-Type', 'application/json')
-      req2.setRequestHeader('X-CSRF-Token', CSRF_TOKEN)
-      req2.send(JSON.stringify({
-        term: event.currentTarget.value,
-        workspace_id: workspace_id
-      }))
+    inviteUser.addEventListener('keyup', function(event) {
+      // Clear the list of results
+      inviteSearch.innerHTML = ''
 
-      req2.onreadystatechange = function() {
-        if (this.readyState == 4) {
-          if (this.status == 200) {
-            inviteSearch.innerHTML = ''
-            JSON.parse(this.responseText).forEach(function(result) {
-              renderInviteSearchResult(inviteSearch, result)
-            })
-          } else {
-            inviteSearch.innerHTML = 'FAILED'
+      if (event.currentTarget.value.length > 2) {
+        inviteSearch.innerHTML = 'LOADING...'
+        var req2 = new XMLHttpRequest()
+        req2.open("POST", "/users/invite", true)
+        req2.setRequestHeader('Content-Type', 'application/json')
+        req2.setRequestHeader('X-CSRF-Token', CSRF_TOKEN)
+        req2.send(JSON.stringify({
+          term: event.currentTarget.value,
+          workspace_id: workspace_id
+        }))
+
+        req2.onreadystatechange = function() {
+          if (this.readyState == 4) {
+            if (this.status == 200) {
+              inviteSearch.innerHTML = ''
+              JSON.parse(this.responseText).forEach(function(result) {
+                renderInviteSearchResult(inviteSearch, result)
+              })
+            } else {
+              inviteSearch.innerHTML = 'FAILED'
+            }
           }
         }
       }
-    }
-  })
+    })
+
+  }
 
 
   dmInput.addEventListener('keyup', function(event) {
