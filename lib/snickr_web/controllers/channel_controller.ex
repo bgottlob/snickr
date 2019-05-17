@@ -51,7 +51,10 @@ defmodule SnickrWeb.ChannelController do
         |> redirect(to: Routes.channel_path(conn, :show, channel.id))
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "new.html", changeset: changeset)
+        render(conn, "new.html",
+          changeset: changeset,
+          workspace_id: changeset.changes.workspace_id
+        )
     end
   end
 
