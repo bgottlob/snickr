@@ -34,8 +34,6 @@ defmodule SnickrWeb.InviteController do
     render(conn, "show.html", membershipinvitation: Accounts.get_membership_invitation!(id))
   end
 
-  # Modify the pattern match to make sure we have a workspace_id to return to in the error path
-  # TODO: only allow creation of pending invites
   def create(conn, %{"invite" => %{"workspace_id" => workspace_id} = attrs}) do
     attrs = Map.put(attrs, "invited_by_user_id", conn.assigns.current_user.id)
 
