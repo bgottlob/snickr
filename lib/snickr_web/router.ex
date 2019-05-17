@@ -36,6 +36,7 @@ defmodule SnickrWeb.Router do
     post "/invites/:id/decline_subscription", InviteController, :decline_subscription
     post "/subscriptions", SubscriptionController, :create
     delete "/subscriptions/:user_id/:channel_id", SubscriptionController, :delete
+    post "/messages/search", MessageController, :search
 
     get "/*path", NoRouteController, :index
   end
