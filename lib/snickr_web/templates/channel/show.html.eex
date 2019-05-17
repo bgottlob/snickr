@@ -12,7 +12,7 @@
 <p><em>Description:</em> <%= @channel.description %></p>
 <% end %>
 
-<div id="messages"></div>
+<div style="overflow:auto; height:60vh" id="messages"></div>
 <input id="chat-input" placeholder="Enter message" type="text">
 
 <%= if @channel.type != "direct" do %>

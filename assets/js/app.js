@@ -39,9 +39,7 @@ if (document.querySelector('#channel-data')) {
   })
 
   channel.on('new_msg', message => {
-    let messageItem = document.createElement('li')
-    messageItem.innerText = `[${message.inserted_at}, ${message.sent_by_user.username}] ${message.content}`
-    messagesContainer.appendChild(messageItem)
+    renderMessage(messagesContainer, message)
   })
 
   // Escapes untrusted strings
@@ -54,9 +52,10 @@ if (document.querySelector('#channel-data')) {
   function renderMessage(container, message) {
     let template = document.createElement('div')
     template.innerHTML = `
-  <li>[${esc(message.inserted_at)} from ${esc(message.sent_by_user.username)}] ${esc(message.content)}</li>
+  <li style="list-style: none"><em style="font-size: 0.7em">${esc(new Date(message.inserted_at).toLocaleString())}</em><br><strong>${esc(message.sent_by_user.username)}:</strong> ${esc(message.content)}</li>
   `
     container.appendChild(template)
+    container.scrollTop = container.scrollHeight
   }
 
   channel.join()
