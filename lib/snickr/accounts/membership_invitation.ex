@@ -20,7 +20,7 @@ defmodule Snickr.Accounts.MembershipInvitation do
     membership_invitation
     |> cast(attrs, [:status, :user_id, :workspace_id, :invited_by_user_id])
     |> validate_required([:status, :user_id, :workspace_id, :invited_by_user_id])
-    |> validate_inclusion(:status, ["pending", "accepted"])
+    |> validate_inclusion(:status, ["pending", "accepted", "declined"])
     |> assoc_constraint(:user)
     |> assoc_constraint(:workspace)
     |> assoc_constraint(:invited_by_user)

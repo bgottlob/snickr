@@ -524,6 +524,18 @@ defmodule Snickr.Accounts do
     end)
   end
 
+  def decline_membership_invitation(%MembershipInvitation{} = membership_invitation) do
+    update_membership_invitation(membership_invitation, %{status: "declined"})
+  end
+
+  def decline_admin_invitation(%AdminInvitation{} = admin_invitation) do
+    update_admin_invitation(admin_invitation, %{status: "declined"})
+  end
+
+  def decline_subscription_invitation(%SubscriptionInvitation{} = subscription_invitation) do
+    update_subscription_invitation(subscription_invitation, %{status: "declined"})
+  end
+
   @doc """
   Deletes a MembershipInvitation.
 

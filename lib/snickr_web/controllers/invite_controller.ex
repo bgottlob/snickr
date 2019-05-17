@@ -129,4 +129,46 @@ defmodule SnickrWeb.InviteController do
         |> redirect(to: Routes.invite_path(conn, :index))
     end
   end
+
+  def decline(conn, %{"id" => id}) do
+    case Accounts.decline_membership_invitation(Repo.get(MembershipInvitation, id)) do
+      {:ok, _result} ->
+        conn
+        |> put_flash(:info, "You declined the invitation")
+        |> redirect(to: Routes.invite_path(conn, :index))
+
+      {:error, _reason} ->
+        conn
+        |> put_flash(:error, "An error occurred")
+        |> redirect(to: Routes.invite_path(conn, :index))
+    end
+  end
+
+  def decline_admin(conn, %{"id" => id}) do
+    case Accounts.decline_admin_invitation(Repo.get(AdminInvitation, id)) do
+      {:ok, _result} ->
+        conn
+        |> put_flash(:info, "You declined the invitation")
+        |> redirect(to: Routes.invite_path(conn, :index))
+
+      {:error, _reason} ->
+        conn
+        |> put_flash(:error, "An error occurred")
+        |> redirect(to: Routes.invite_path(conn, :index))
+    end
+  end
+
+  def decline_subscription(conn, %{"id" => id}) do
+    case Accounts.decline_subscription_invitation(Repo.get(SubscriptionInvitation, id)) do
+      {:ok, _result} ->
+        conn
+        |> put_flash(:info, "You declined the invitation")
+        |> redirect(to: Routes.invite_path(conn, :index))
+
+      {:error, _reason} ->
+        conn
+        |> put_flash(:error, "An error occurred")
+        |> redirect(to: Routes.invite_path(conn, :index))
+    end
+  end
 end
