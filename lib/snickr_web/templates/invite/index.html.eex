@@ -1,33 +1,36 @@
 <h1>Your Invitations</h1>
 
 <%= if !Enum.empty?(@membershipinvitations) do %>
-<h1>Membership Invitations</h1>
+<h2>Membership Invitations</h2>
 <ul>
 <%= for mi <- @membershipinvitations do %>
   <li> Pending Invitation from <%= "#{mi.invited_by_user.first_name} #{mi.invited_by_user.last_name}" %> for <%= mi.workspace.name %>
     <%= button "Accept", to: Routes.invite_path(@conn, :accept, mi.id), method: :post %>
+    <%= button "Decline", to: Routes.invite_path(@conn, :decline, mi.id), method: :post %>
   </li>
   <% end %>
 </ul>
 <% end %>
 
 <%= if !Enum.empty?(@admininvitations) do %>
-<h1>Your Admin Invitations</h1>
+<h2>Your Admin Invitations</h2>
 <ul>
 <%= for ai <- @admininvitations do %>
   <li> Pending Invitation from <%= "#{ai.invited_by_user.first_name} #{ai.invited_by_user.last_name}" %> for <%= ai.workspace.name %>
     <%= button "Accept", to: Routes.invite_path(@conn, :accept_admin, ai.id), method: :post %>
+    <%= button "Decline", to: Routes.invite_path(@conn, :decline_admin, ai.id), method: :post %>
   </li>
   <% end %>
 </ul>
 <% end %>
 
 <%= if !Enum.empty?(@subscriptioninvitations) do %>
-<h1>Your Channel Invitations</h1>
+<h2>Your Channel Invitations</h2>
 <ul>
 <%= for si <- @subscriptioninvitations do %>
   <li> Pending Invitation from <%= "#{si.invited_by_user.first_name} #{si.invited_by_user.last_name}" %> for <%= si.channel.name %>
     <%= button "Accept", to: Routes.invite_path(@conn, :accept_subscription, si.id), method: :post %>
+    <%= button "Decline", to: Routes.invite_path(@conn, :decline_subscription, si.id), method: :post %>
   </li>
   <% end %>
 </ul>

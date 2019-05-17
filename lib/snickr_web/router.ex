@@ -31,6 +31,9 @@ defmodule SnickrWeb.Router do
     post "/invites/:id/accept", InviteController, :accept
     post "/invites/:id/accept_admin", InviteController, :accept_admin
     post "/invites/:id/accept_subscription", InviteController, :accept_subscription
+    post "/invites/:id/decline", InviteController, :decline
+    post "/invites/:id/decline_admin", InviteController, :decline_admin
+    post "/invites/:id/decline_subscription", InviteController, :decline_subscription
     post "/subscriptions", SubscriptionController, :create
     delete "/subscriptions/:user_id/:channel_id", SubscriptionController, :delete
 

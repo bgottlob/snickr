@@ -20,7 +20,7 @@ defmodule Snickr.Accounts.SubscriptionInvitation do
     subscription_invitation
     |> cast(attrs, [:status, :user_id, :channel_id, :invited_by_user_id])
     |> validate_required([:status, :user_id, :channel_id, :invited_by_user_id])
-    |> validate_inclusion(:status, ["pending", "accepted"])
+    |> validate_inclusion(:status, ["pending", "accepted", "declined"])
     |> assoc_constraint(:user)
     |> assoc_constraint(:channel)
     |> assoc_constraint(:invited_by_user)
