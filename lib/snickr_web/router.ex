@@ -33,6 +33,8 @@ defmodule SnickrWeb.Router do
     post "/invites/:id/accept_subscription", InviteController, :accept_subscription
     post "/subscriptions", SubscriptionController, :create
     delete "/subscriptions/:user_id/:channel_id", SubscriptionController, :delete
+
+    get "/*path", NoRouteController, :index
   end
 
   # Other scopes may use custom stacks.
