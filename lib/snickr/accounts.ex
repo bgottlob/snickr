@@ -18,15 +18,6 @@ defmodule Snickr.Accounts do
 
   alias Snickr.Platform.{Channel, Workspace}
 
-  @doc """
-  Returns the list of users.
-
-  ## Examples
-
-      iex> list_users()
-      [%User{}, ...]
-
-  """
   def workspace_pending_invites(%User{} = user) do
     Repo.all(
       from m in MembershipInvitation,

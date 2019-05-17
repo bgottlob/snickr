@@ -332,6 +332,20 @@ defmodule Snickr.Platform do
     )
   end
 
+  def search_messages(term, channel_id, opts \\ [limit: 5]) do
+    term_pattern = "%#{term}%"
+
+    Repo.all(
+      from m in Message,
+        join: u in assoc(m, :sent_by_user),
+        where:
+          m.channel_id == ^channel_id and (ilike(m.content, ^term_pattern) or u.username == ^term),
+        preload: [:sent_by_user],
+        limit: ^opts[:limit],
+        order_by: [desc: m.inserted_at]
+    )
+  end
+
   @doc """
   Gets a single message.
 

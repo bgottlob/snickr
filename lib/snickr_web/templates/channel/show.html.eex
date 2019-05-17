@@ -15,6 +15,64 @@
 <div style="overflow:auto; height:60vh" id="messages"></div>
 <input id="chat-input" placeholder="Enter message" type="text">
 
+  <h2>Search for Messages in <%= @channel.name %></h2>
+  <div>
+    <input id="message-search-term" placeholder="Search for message contents">
+  </div>
+  <ul id="message-search"></ul>
+
+ <script>
+  const CSRF_TOKEN = <%= raw Poison.encode!(Plug.CSRFProtection.get_csrf_token()) %>
+  var messageTerm = document.querySelector('#message-search-term')
+  var messageSearch = document.querySelector('#message-search')
+
+  function renderMessageSearchResult(container, message) {
+    let template = document.createElement('div')
+    template.innerHTML = `
+  <li style="list-style: none"><em style="font-size: 0.7em">${esc(new Date(message.inserted_at).toLocaleString())}</em><br><strong>${esc(message.sent_by_user.username)}:</strong> ${esc(message.content)}</li>
+  `
+    container.appendChild(template)
+    container.scrollTop = container.scrollHeight
+  }
+
+  messageTerm.addEventListener('keyup', function(event) {
+    // Clear the list of results
+    messageSearch.innerHTML = ''
+    
+    if (event.currentTarget.value.length > 2) {
+      messageSearch.innerHTML = 'LOADING...'
+      var req2 = new XMLHttpRequest()
+      req2.open("POST", "/messages/search", true)
+      req2.setRequestHeader('Content-Type', 'application/json')
+      req2.setRequestHeader('X-CSRF-Token', CSRF_TOKEN)
+      req2.send(JSON.stringify({
+        term: event.currentTarget.value,
+        channel_id: Number(<%= @channel.id %>)
+      }))
+
+      req2.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {
+            messageSearch.innerHTML = ''
+            JSON.parse(this.responseText).forEach(function(result) {
+              renderMessageSearchResult(messageSearch, result)
+            })
+          } else {
+            messageSearch.innerHTML = 'FAILED'
+          }
+        }
+      }
+    }
+  })
+
+  // Escapes untrusted strings
+  function esc(str) {
+    let div = document.createElement('div')
+    div.appendChild(document.createTextNode(str))
+    return div.innerHTML
+  }
+ </script>
+
 <%= if @channel.type != "direct" do %>
   <%= link "Unsubscribe", to: Routes.subscription_path(@conn, :delete, @current_user.id, @channel.id), method: :delete %>
   <h2>Invite Someone to <%= @channel.name %></h2>
@@ -24,7 +82,6 @@
   <ul id="invite-search"></ul>
 
  <script>
-  const CSRF_TOKEN = <%= raw Poison.encode!(Plug.CSRFProtection.get_csrf_token()) %>
   const channelId = Number(<%= @channel.id %>)
   var inviteUser = document.querySelector('#invite-user')
   var inviteSearch = document.querySelector('#invite-search')
