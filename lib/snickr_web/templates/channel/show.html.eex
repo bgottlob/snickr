@@ -12,10 +12,14 @@
 <p><em>Description:</em> <%= @channel.description %></p>
 <% end %>
 
-<div style="overflow:auto; height:60vh" id="messages"></div>
+<div style="overflow:auto; height:45vh" id="messages"></div>
 <input id="chat-input" placeholder="Enter message" type="text">
 
+<%= if @channel.type == "direct" do %>
+  <h2>Search for Messages with <%= direct_recipient(@channel, @current_user) %></h2>
+<% else %>
   <h2>Search for Messages in <%= @channel.name %></h2>
+<% end %>
   <div>
     <input id="message-search-term" placeholder="Search for message contents">
   </div>
