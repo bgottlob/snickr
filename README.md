@@ -1,7 +1,9 @@
 # Snickr
 
-To start your Phoenix server:
+To start the Snickr Phoenix server:
 
+  * Follow the [Phoenix installation guide](https://hexdocs.pm/phoenix/installation.html#content)
+      * This project uses PostgreSQL, so that must be installed
   * Install dependencies with `mix deps.get`
   * Create and migrate your database with `mix ecto.setup`
   * Install Node.js dependencies with `cd assets && npm install`
